@@ -1340,37 +1340,35 @@ link.href = URL.createObjectURL(blob);
 link.download = nombreArchivo;
 link.click();
 }
-// Función para abrir la factura oficial en el modal desde el historial
-// Función para abrir la factura oficial en el modal desde el historial
-// Función para abrir la factura oficial en el modal desde el historial
+// Función para ver el detalle o factura desde el historial al hacer clic en el botón
+// Función para ver el detalle de la venta o la factura desde el historial
 function verDetalleVentaHistorial(idVenta) {
-    // Convertimos ambos a texto para asegurarnos de que coincidan perfectamente
-    const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
+    // Buscamos la venta en el historial global
+    const venta = ventasGlobales.find(v => v.id == idVenta || v.timestamp == idVenta);
     
     if (!venta) {
         alert("No se encontró la información de esta venta.");
         return;
     }
 
-    // Abrimos directamente el modal de la factura oficial
-    if (typeof abrirModalFactura === 'function') {
-        abrirModalFactura(venta);
-    } else if (typeof mostrarFactura === 'function') {
-        mostrarFactura(venta);
+    // Si la venta tiene factura fiscal, abrimos el modal de factura
+    if (venta.numeroFactura || venta.conFactura) {
+        if (typeof abrirModalFactura === 'function') {
+            abrirModalFactura(venta);
+        } else {
+            alert(`Factura N°: ${venta.numeroFactura || 'S/N'}\nCliente: ${venta.cliente}\nTotal: $${venta.montoUSD}`);
+        }
     } else {
-        alert("Factura de: " + (venta.cliente || 'General') + " - Total: $" + venta.montoUSD);
+        // Si fue una venta normal, mostramos el ticket detallado con la descripción de lo comprado
+        alert(`--- TICKET DE VENTA ---\n` +
+              `Cliente: ${venta.cliente || 'General'}\n` +
+              `Fecha: ${venta.fecha || 'N/A'} - ${venta.hora || ''}\n` +
+              `Detalle / Productos: ${venta.detalle || venta.productos || 'Sin descripción'}\n` +
+              `Total USD: $${venta.montoUSD} | Total Bs: Bs. ${venta.montoBS}`);
     }
 }
-function verDetalleVentaHistorial(idVenta) {
-    const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
-    
-    if (!venta) {
-        alert("No se encontró la información de esta venta.");
-        return;
-    }
-
-    abrirModalFactura(venta);
-}
+</script>
+<script>
     window.addEventListener('load', function() {
         setTimeout(function() {
             const splash = document.getElementById('app-splash-screen');
