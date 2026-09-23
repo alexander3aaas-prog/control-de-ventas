@@ -37,36 +37,60 @@
     body {
         width: 100% !important;
         overflow-x: hidden !important;
-        flex-direction: column !important;
-    }
-    .app-container {
-        flex-direction: column !important;
         padding: 5px !important;
     }
+    .app-container {
+        padding: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    /* Estructura para móviles: Logo arriba y barra de iconos horizontal abajo */
     .sidebar {
         width: 100% !important;
         height: auto !important;
         display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-around !important;
-        align-items: center !important;
+        flex-direction: column !important;
         background: white !important;
-        padding: 8px 4px !important;
+        padding: 10px !important;
         position: sticky !important;
         top: 0 !important;
         z-index: 1000 !important;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         margin-bottom: 15px;
+        align-items: center !important;
     }
-    /* Oculta los textos en el celular para que solo se vean los iconos ordenados */
-    .sidebar span, .sidebar .menu-text {
+    
+    /* Contenedor de iconos en fila */
+    .sidebar-menu, .sidebar nav, .menu-items {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        width: 100% !important;
+        flex-wrap: wrap !important;
+    }
+
+    /* Logo o título principal fijo arriba */
+    .sidebar .logo, .sidebar h1, .sidebar h2, .sidebar .app-title {
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Ocultamos los textos del menú en el celular para que solo se vean los iconos limpios */
+    .sidebar span:not(.icon), .sidebar .menu-text {
         display: none !important;
     }
+
     .sidebar a, .sidebar button {
         font-size: 20px !important;
-        padding: 6px 10px !important;
+        padding: 8px 12px !important;
+        background: transparent !important;
+        border: none !important;
+        color: var(--accent-primary) !important;
         text-align: center;
     }
+    
     .modal-content, .card, .container, header, main {
         max-width: 100% !important;
         box-sizing: border-box !important;
