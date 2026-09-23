@@ -129,6 +129,30 @@
         box-sizing: border-box !important;
     }
 }
+@media (max-width: 768px) {
+    /* Forzamos a que las filas de formularios se apilen en una sola columna limpia */
+    .form-row, .row, .fiscal-form, form {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    /* Las cajas de input, select y textarea ocuparán el 100% estético */
+    input, select, textarea {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 14px !important;
+        padding: 10px 12px !important;
+    }
+
+    /* Las tarjetas o contenedores se adaptan sin desbordarse */
+    .card, .container, .app-container {
+        padding: 10px !important;
+        box-sizing: border-box !important;
+    }
+}
 * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
 body { background-color: var(--bg-app); color: var(--text-dark); display: flex; min-height: 100vh; }
 
@@ -1166,16 +1190,17 @@ document.getElementById("cfgCorrelativo").value = datos.correlativo;
 }
 
 function guardarDatosNegocio() {
-const datos = {
-razonSocial: document.getElementById("cfgRazonSocial").value.trim(),
-rif: document.getElementById("cfgRif").value.trim(),
-direccion: document.getElementById("cfgDireccion").value.trim(),
-telefono: document.getElementById("cfgTelefono").value.trim(),
-serie: document.getElementById("cfgSerie").value.trim(),
-correlativo: parseInt(document.getElementById("cfgCorrelativo").value) || 1
-};
-localStorage.setItem('cfg_negocio', JSON.stringify(datos));
-alert("¡Configuración fiscal guardada!");
+    const datos = {
+        razonSocial: document.getElementById("cfgRazonSocial").value.trim(),
+        rif: document.getElementById("cfgRif").value.trim(),
+        direccion: document.getElementById("cfgDireccion").value.trim(),
+        telefono: document.getElementById("cfgTelefono").value.trim(),
+        serie: document.getElementById("cfgSerie").value.trim(),
+        correlativo: parseInt(document.getElementById("cfgCorrelativo").value) || 1
+    };
+    // Usamos 'datos_negocio' para que la factura lo lea de inmediato
+    localStorage.setItem('datos_negocio', JSON.stringify(datos));
+    alert("¡Configuración fiscal guardada con éxito!");
 }
 
 function abrirModalFactura(venta) {
