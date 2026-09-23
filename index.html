@@ -38,13 +38,16 @@
         width: 100% !important;
         overflow-x: hidden !important;
         padding: 5px !important;
+        display: block !important;
     }
     .app-container {
         padding: 10px !important;
         width: 100% !important;
         box-sizing: border-box !important;
+        display: block !important;
     }
-    /* Estructura para móviles: Logo arriba y barra de iconos horizontal abajo */
+    
+    /* Contenedor general de la barra lateral en móvil */
     .sidebar {
         width: 100% !important;
         height: auto !important;
@@ -60,16 +63,7 @@
         align-items: center !important;
     }
     
-    /* Contenedor de iconos en fila */
-    .sidebar-menu, .sidebar nav, .menu-items {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-around !important;
-        width: 100% !important;
-        flex-wrap: wrap !important;
-    }
-
-    /* Logo o título principal fijo arriba */
+    /* El logo o título queda arriba ocupando todo el ancho */
     .sidebar .logo, .sidebar h1, .sidebar h2, .sidebar .app-title {
         display: block !important;
         width: 100% !important;
@@ -77,18 +71,33 @@
         margin-bottom: 10px !important;
     }
 
-    /* Ocultamos los textos del menú en el celular para que solo se vean los iconos limpios */
-    .sidebar span:not(.icon), .sidebar .menu-text {
-        display: none !important;
-    }
-
+    /* Los enlaces o botones del menú se colocan en fila horizontal uno al lado del otro */
     .sidebar a, .sidebar button {
-        font-size: 20px !important;
-        padding: 8px 12px !important;
+        display: inline-flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 10px !important;
+        padding: 8px 10px !important;
         background: transparent !important;
         border: none !important;
         color: var(--accent-primary) !important;
         text-align: center;
+        flex: 1;
+    }
+
+    /* Forzamos a que los elementos internos del menú fluyan en fila horizontal debajo del logo */
+    .sidebar div, .sidebar nav {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        width: 100% !important;
+        flex-wrap: wrap !important;
+    }
+
+    /* Ocultamos los textos largos para que solo queden los iconos limpios */
+    .sidebar span:not(.icon), .sidebar .menu-text {
+        display: none !important;
     }
     
     .modal-content, .card, .container, header, main {
