@@ -1341,9 +1341,10 @@ link.download = nombreArchivo;
 link.click();
 }
 // Función para abrir la factura oficial en el modal desde el historial
+// Función para abrir la factura oficial en el modal desde el historial
 function verDetalleVentaHistorial(idVenta) {
-    // Buscamos la venta en el historial global
-    const venta = ventasGlobales.find(v => v.id == idVenta || v.timestamp == idVenta);
+    // Convertimos ambos a texto para asegurarnos de que coincidan perfectamente
+    const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
     
     if (!venta) {
         alert("No se encontró la información de esta venta.");
