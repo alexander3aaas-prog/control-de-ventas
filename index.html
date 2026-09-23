@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control de Ventas e Inventario</title>
 
 <!-- Icono PWA para Acceso Directo / App en el Celular -->
@@ -32,7 +32,17 @@
 --radius-md: 10px;
 --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
-
+/* Adaptabilidad automática para teléfonos móviles */
+@media screen and (max-width: 768px) {
+    body {
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+    .modal-content, .card, .container, header, main {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
 * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
 body { background-color: var(--bg-app); color: var(--text-dark); display: flex; min-height: 100vh; }
 
@@ -129,7 +139,7 @@ body * { visibility: hidden; }
 #ticketPrintArea { position: absolute; left: 0; top: 0; width: 100%; font-family: 'Courier New', Courier, monospace; }
 .modal-actions, .modal-overlay { background: transparent; }
 }
-   {
+
   @media (max-width: 768px) {
     body {
       overflow-x: hidden;
@@ -241,9 +251,10 @@ body * { visibility: hidden; }
 
 <div style="background: #f8fafc; padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 15px;">
 <label style="color: var(--accent-primary); font-size: 13px; margin-bottom: 10px;"><i class="fa-solid fa-id-card"></i> Datos del Cliente / Solicitante (SENIAT)</label>
-<div class="grid-3" style="margin-bottom: 0;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 0;">
 <div><label id="lblCliente">Nombre / Razón Social</label><input type="text" id="nombreCliente" placeholder="Ej: Dr. Pérez / Juan Delgado"></div>
 <div><label>Cédula / RIF</label><input type="text" id="rifCliente" placeholder="Ej: V-12345678"></div>
+<div><label>Teléfono</label><input type="text" id="telefonoCliente" placeholder="Ej: 0412-1234567"></div>
 <div><label>Dirección / Área</label><input type="text" id="dirCliente" placeholder="Ej: Emergencia / Valencia"></div>
 </div>
 </div>
@@ -413,25 +424,26 @@ body * { visibility: hidden; }
 <div class="modal-content">
 <div id="ticketPrintArea">
 <div class="ticket-header">
+<small style="font-size: 14px; font-weight: bold;">FACTURA</small><br>
 <strong id="pRazonSocial">NOMBRE NEGOCIO C.A.</strong><br>
 RIF: <span id="pRif">J-00000000-0</span><br>
 <span id="pDireccion">Valencia, Carabobo</span><br>
-TEL: <span id="pTelefono">0241-0000000</span><br>
-<small>FACTURA LEGAL DE VENTA</small><br>
+TEL: <span id="pTelefono">0241-0000000</span><br><br>
 <strong>N° DE CONTROL: <span id="pNumFactura">FACT-001-000001</span></strong>
 </div>
 <div class="ticket-body">
 <strong>FECHA:</strong> <span id="pFecha">2026-09-20</span> <span id="pHora">10:00</span><br>
 <strong>CLIENTE:</strong> <span id="pCliente">Contado General</span><br>
 <strong>RIF/CI:</strong> <span id="pClienteRif">V-00000000</span><br>
+<strong>TEL:</strong> <span id="pClienteTel">N/A</span><br>
 <strong>DIR:</strong> <span id="pClienteDir">Valencia</span><br>
 ----------------------------------------
 <div id="pDetalleItems"></div>
 ----------------------------------------
-<div class="ticket-row"><span>SUBTOTAL ($):</span><span id="pSubtotalUSD">$0.00</span></div>
-<div class="ticket-row"><span>TASA DE CAMBIO:</span><span id="pTasa">0.00 Bs/$</span></div>
+<div class="ticket-row"><span>SUBTOTAL (Bs):</span><span id="pSubtotalBS">0.00 Bs</span></div>
+<div class="ticket-row"><span>IVA (16%):</span><span id="pIvaBS">0.00 Bs</span></div>
+<div class="ticket-row"><span>TASA:</span><span id="pTasa">0.00 Bs/$</span></div>
 <div class="ticket-total">
-<div class="ticket-row"><span>TOTAL A PAGAR ($):</span><span id="pTotalUSD">$0.00</span></div>
 <div class="ticket-row"><span>TOTAL A PAGAR (Bs):</span><span id="pTotalBS">0.00 Bs</span></div>
 </div>
 <div style="text-align: center; margin-top: 10px;"><small>*** GRACIAS POR SU COMPRA ***</small></div>
@@ -779,11 +791,12 @@ function finalizarVenta(conFactura = false) {
 if(carrito.length === 0) return alert("Agrega al menos un producto.");
 
 const tasa = obtenerTasaActual();
-const tipoPago = document.getElementById("tipoPago").value;
-const categoriaFiado = document.getElementById("categoriaFiado").value;
-let cliente = document.getElementById("nombreCliente").value.trim();
-let rifCliente = document.getElementById("rifCliente").value.trim() || "V-00000000";
-let dirCliente = document.getElementById("dirCliente").value.trim() || "Valencia";
+    const tipoPago = document.getElementById("tipoPago").value;
+    const categoriaFiado = document.getElementById("categoriaFiado").value;
+    let cliente = document.getElementById("nombreCliente").value.trim() || "Contado General";
+    let rifCliente = document.getElementById("rifCliente").value.trim() || "V-00000000";
+    let telefonoCliente = document.getElementById("telefonoCliente").value.trim() || "N/A";
+    let dirCliente = document.getElementById("dirCliente").value.trim() || "Valencia";
 
 const fecha = document.getElementById("fechaVentas").value;
 const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -793,20 +806,48 @@ let categoriaFinal = tipoPago === 'Fiado' ? categoriaFiado : 'Contado';
 
 if(!cliente) cliente = estado === 'Pendiente' ? "Cuenta No Especificada" : "Contado General";
 
-let totalUSD = carrito.reduce((sum, item) => sum + item.subtotalUSD, 0);
+let subtotalUSD = 0;
+    let itemsDetalle = [];
 
-const nuevaVenta = { 
-id: Date.now(), 
-fecha, hora, cliente, rifCliente, dirCliente,
-categoria: categoriaFinal, 
-detalle: carrito.map(i => `${i.cantidad} ${i.nombre}`).join(", "), 
-items: [...carrito],
-montoUSD: totalUSD, 
-montoBS: totalUSD * tasa, 
-tasaUsada: tasa, 
-estado 
-};
+    carrito.forEach(item => {
+        let subItemUSD = item.precioUSD * item.cantidad;
+        subtotalUSD += subItemUSD;
+        itemsDetalle.push({
+            id: item.id,
+            nombre: item.nombre,
+            cantidad: item.cantidad,
+            precioUSD: item.precioUSD,
+            subtotalUSD: subItemUSD
+        });
+    });
 
+    // Cálculos en Dólares y su expresión final en Bolívares
+    let ivaUSD = subtotalUSD * 0.16;
+    let totalUSD = subtotalUSD + ivaUSD;
+    let totalBS = totalUSD * tasa;
+    let subtotalBS = subtotalUSD * tasa;
+    let ivaBS = ivaUSD * tasa;
+
+    const nuevaVenta = {
+        id: Date.now(),
+        fecha,
+        hora,
+        cliente,
+        rifCliente,
+        telefonoCliente,
+        dirCliente,
+        categoria: categoriaFinal,
+        detalle: carrito.map(i => `${i.cantidad} ${i.nombre}`).join(", "),
+        items: [...carrito],
+        subtotalUSD: subtotalUSD,
+        subtotalBS: subtotalBS,
+        ivaUSD: ivaUSD,
+        ivaBS: ivaBS,
+        montoUSD: totalUSD,
+        montoBS: totalBS,
+        tasaUsada: tasa,
+        estado
+    };
 if (conFactura) {
 ventaTempParaImprimir = nuevaVenta;
 abrirModalFactura(nuevaVenta);
@@ -1041,36 +1082,45 @@ alert("¡Configuración fiscal guardada!");
 }
 
 function abrirModalFactura(venta) {
-const cfg = JSON.parse(localStorage.getItem('cfg_negocio')) || {
-razonSocial: "CLÍNICA Y SERVICIOS C.A.", rif: "J-12345678-0",
-direccion: "Valencia, Carabobo", telefono: "0241-0000000",
-serie: "FACT-001-", correlativo: 1
-};
+    const config = JSON.parse(localStorage.getItem('datos_negocio')) || {
+        razonSocial: "NOMBRE NEGOCIO C.A.",
+        rif: "J-00000000-0",
+        direccion: "Valencia, Carabobo",
+        telefono: "0241-0000000",
+        serie: "FACT-001-",
+        correlativo: 1
+    };
 
-document.getElementById("pRazonSocial").innerText = cfg.razonSocial;
-document.getElementById("pRif").innerText = cfg.rif;
-document.getElementById("pDireccion").innerText = cfg.direccion;
-document.getElementById("pTelefono").innerText = cfg.telefono;
-document.getElementById("pNumFactura").innerText = `${cfg.serie}${String(cfg.correlativo).padStart(6, '0')}`;
+    // Actualizar datos del encabezado de la factura (FACTURA primero, luego negocio)
+    document.getElementById("pRazonSocial").innerText = config.razonSocial;
+    document.getElementById("pRif").innerText = config.rif;
+    document.getElementById("pDireccion").innerText = config.direccion;
+    document.getElementById("pTelefono").innerText = config.telefono;
+    document.getElementById("pNumFactura").innerText = config.serie + String(config.correlativo).padStart(6, '0');
 
-document.getElementById("pFecha").innerText = venta.fecha;
-document.getElementById("pHora").innerText = venta.hora;
-document.getElementById("pCliente").innerText = venta.cliente;
-document.getElementById("pClienteRif").innerText = venta.rifCliente;
-document.getElementById("pClienteDir").innerText = venta.dirCliente;
+    document.getElementById("pFecha").innerText = venta.fecha;
+    document.getElementById("pHora").innerText = venta.hora;
+    document.getElementById("pCliente").innerText = venta.cliente;
+    document.getElementById("pClienteRif").innerText = venta.rifCliente;
+    document.getElementById("pClienteTel").innerText = venta.telefonoCliente || 'N/A';
+    document.getElementById("pClienteDir").innerText = venta.dirCliente;
+    document.getElementById("pTasa").innerText = `${venta.tasaUsada.toFixed(2)} Bs/$`;
 
-const contenedorItems = document.getElementById("pDetalleItems");
-contenedorItems.innerHTML = "";
-venta.items.forEach(it => {
-contenedorItems.innerHTML += `<div class="ticket-row"><span>${it.cantidad}x ${it.nombre}</span><span>$${it.subtotalUSD.toFixed(2)}</span></div>`;
-});
+    // Renderizar ítems expresados en Bolívares
+    let htmlItems = "";
+    venta.items.forEach(item => {
+        let precioBsItem = item.precioUSD * venta.tasaUsada;
+        let totalBsItem = precioBsItem * item.cantidad;
+        htmlItems += `<div class="ticket-row"><span>${item.cantidad}x ${item.nombre}</span><span>${totalBsItem.toFixed(2)} Bs</span></div>`;
+    });
+    document.getElementById("pDetalleItems").innerHTML = htmlItems;
 
-document.getElementById("pSubtotalUSD").innerText = `$${venta.montoUSD.toFixed(2)}`;
-document.getElementById("pTasa").innerText = `${venta.tasaUsada.toFixed(2)} Bs/$`;
-document.getElementById("pTotalUSD").innerText = `$${venta.montoUSD.toFixed(2)}`;
-document.getElementById("pTotalBS").innerText = `${venta.montoBS.toFixed(2)} Bs`;
+    // Totales expresados netamente en Bolívares
+    document.getElementById("pSubtotalBS").innerText = `${venta.subtotalBS.toFixed(2)} Bs`;
+    document.getElementById("pIvaBS").innerText = `${venta.ivaBS.toFixed(2)} Bs`;
+    document.getElementById("pTotalBS").innerText = `${venta.montoBS.toFixed(2)} Bs`;
 
-document.getElementById("modalFactura").style.display = "flex";
+    document.getElementById("modalFactura").style.display = "flex";
 }
 
 function cerrarModalFactura() {
