@@ -1205,13 +1205,12 @@ tbody.innerHTML += `
                 <td>$${v.montoUSD.toFixed(2)}</td>
                 <td>Bs. ${v.montoBS.toFixed(2)}</td>
                 <td>
-                    <button onclick="verDetalleVentaHistorial('${v.id || v.timestamp}')" class="badge ${badgeClass}" style="border: none; cursor: pointer; font-weight: bold;">
+                    <button onclick="mostrarTicketHistorial('${v.timestamp || v.id}')" class="badge ${badgeClass}" style="border: none; cursor: pointer; font-weight: bold;">
                         ${v.estado}
                     </button>
                 </td>
             </tr>
         `;
-}
 });
 
 document.getElementById("histTotalUSD").innerText = "$" + acumuladoUSD.toFixed(2);
@@ -1378,6 +1377,55 @@ function verDetalleVentaHistorial(idVenta) {
             }
         }, 600); // Mantiene la animación bonita durante 0.6 segundos
     });
+    // Función limpia para mostrar el ticket visual de la venta seleccionada
+function mostrarTicketHistorial(idVenta) {
+    const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
+    
+    if (!venta) {
+        alert("No se encontró la información de esta venta.");
+        return;
+    }
+
+    // Buscamos si existe un modal de factura/ticket en tu HTML y le inyectamos los datos
+    const modal = document.getElementById('modalFactura') || document.getElementById('modalTicket') || document.getElementById('modal');
+    
+    if (modal) {
+        // Si tienes elementos para mostrar la factura en pantalla, los llenamos
+        const txtCliente = document.getElementById('modalCliente') || document.getElementById('facturaCliente');
+        if (txtCliente) txtCliente.innerText = venta.cliente;
+
+        const txtDetalle = document.getElementById('modalDetalle') || document.getElementById('facturaDetalle');
+        if (txtDetalle) txtDetalle.innerText = venta.detalle;
+
+        const txtTotal = document.getElementById('modalTotal') || document.getElementById('facturaTotal');
+        if (txtTotal) txtTotal.innerText = `$${venta.montoUSD.toFixed(2)} (Bs. ${venta.montoBS.toFixed(2)})`;
+
+        modal.style.display = 'block';
+    } else {
+        // Si tu app usa la función original de imprimir/generar ticket cuando se crea una venta, 
+        // dime cómo se llama esa función para enlazarla aquí directamente.
+        // Por ahora, generamos un diseño limpio flotante en pantalla en vez del alert feo:
+        const ventanaFalsa = window.open('', '_blank', 'width=400,height=600');
+        if (ventanaFalsa) {
+            ventanaFalsa.document.write(`
+                <html>
+                <head><title>Ticket de Venta</title><style>body{font-family:sans-serif;padding:20px;text-align:center;}</style></head>
+                <body>
+                    <h2>--- TICKET DE VENTA ---</h2>
+                    <p><b>Cliente:</b> ${venta.cliente}</p>
+                    <p><b>Fecha:</b> ${venta.fecha} - ${venta.hora}</p>
+                    <p style="text-align:left;"><b>Productos:</b><br>${venta.detalle}</p>
+                    <hr>
+                    <h3>Total USD: $${venta.montoUSD.toFixed(2)}</h3>
+                    <h3>Total Bs: Bs. ${venta.montoBS.toFixed(2)}</h3>
+                    <br><button onclick="window.print()" style="padding:10px 20px;cursor:pointer;">Imprimir Ticket</button>
+                </body>
+                </html>
+            `);
+            ventanaFalsa.document.close();
+        }
+    }
+}
 </script>
 </body>
 </html>
