@@ -46,7 +46,26 @@
     .sidebar {
         width: 100% !important;
         height: auto !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        background: white !important;
+        padding: 8px 4px !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         margin-bottom: 15px;
+    }
+    /* Oculta los textos en el celular para que solo se vean los iconos ordenados */
+    .sidebar span, .sidebar .menu-text {
+        display: none !important;
+    }
+    .sidebar a, .sidebar button {
+        font-size: 20px !important;
+        padding: 6px 10px !important;
+        text-align: center;
     }
     .modal-content, .card, .container, header, main {
         max-width: 100% !important;
