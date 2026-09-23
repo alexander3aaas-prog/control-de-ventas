@@ -47,7 +47,7 @@
         padding: 0 !important;
     }
     
-    /* Contenedor principal de la barra: logo arriba y barra abajo */
+    /* Contenedor principal de la barra en el celular */
     .sidebar {
         width: 100% !important;
         height: auto !important;
@@ -71,41 +71,39 @@
         margin-bottom: 8px !important;
     }
 
-    /* Contenedor interno de los iconos en fila horizontal con desplazamiento suave */
-    .sidebar div, .sidebar nav, .sidebar-menu {
+    /* Forzamos a cualquier contenedor interno de enlaces a ordenarse estrictamente en fila horizontal */
+    .sidebar div, .sidebar nav, .sidebar-menu, .sidebar ul {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: flex-start !important;
+        justify-content: space-around !important;
         align-items: center !important;
         width: 100% !important;
         overflow-x: auto !important;
-        white-space: nowrap !important;
-        padding-bottom: 5px !important;
-        gap: 8px !important;
+        padding-bottom: 4px !important;
     }
 
-    /* Mostramos los textos de los iconos ordenados debajo de cada uno como en tu foto */
+    /* Mostramos los textos pequeños debajo de cada icono */
     .sidebar span, .sidebar .menu-text {
         display: block !important;
-        font-size: 10px !important;
+        font-size: 9px !important;
         text-align: center !important;
         margin-top: 2px !important;
     }
 
-    /* Estilo de los botones del menú */
+    /* Estilo individual de cada botón de navegación */
     .sidebar a, .sidebar button {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 10px !important;
-        padding: 6px 10px !important;
+        font-size: 9px !important;
+        padding: 6px 8px !important;
         background: transparent !important;
         border: none !important;
         color: var(--text-dark, #475569) !important;
         text-decoration: none !important;
-        flex-shrink: 0 !important;
-        border-radius: 8px !important;
+        flex: 1 !important;
+        min-width: 0 !important;
     }
 
     /* Tamaño de los iconos */
@@ -115,10 +113,11 @@
         color: var(--accent-primary) !important;
     }
 
-    /* Botón activo con el fondo azul y bordes redondeados idéntico a la imagen */
+    /* Botón activo con fondo azul elegante idéntico a tu diseño */
     .sidebar a.active, .sidebar button.active {
         background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
         color: white !important;
+        border-radius: 8px !important;
         box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3) !important;
     }
     .sidebar a.active i, .sidebar button.active i, .sidebar a.active span, .sidebar button.active span {
