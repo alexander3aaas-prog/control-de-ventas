@@ -1343,6 +1343,8 @@ link.click();
 // Función para ver el detalle o factura desde el historial al hacer clic en el botón
 // Función para ver el detalle de la venta o la factura desde el historial
 function verDetalleVentaHistorial(idVenta) {
+   // Función para abrir la factura oficial en el modal desde el historial
+function verDetalleVentaHistorial(idVenta) {
     // Buscamos la venta en el historial global
     const venta = ventasGlobales.find(v => v.id == idVenta || v.timestamp == idVenta);
     
@@ -1351,21 +1353,17 @@ function verDetalleVentaHistorial(idVenta) {
         return;
     }
 
-    // Si la venta tiene factura fiscal, abrimos el modal de factura
-    if (venta.numeroFactura || venta.conFactura) {
-        if (typeof abrirModalFactura === 'function') {
-            abrirModalFactura(venta);
-        } else {
-            alert(`Factura N°: ${venta.numeroFactura || 'S/N'}\nCliente: ${venta.cliente}\nTotal: $${venta.montoUSD}`);
-        }
+    // Si tu función para mostrar el modal de la factura se llama de otra forma, 
+    // solo asegúrate de pasarle el objeto 'venta'
+    if (typeof abrirModalFactura === 'function') {
+        abrirModalFactura(venta);
+    } else if (typeof mostrarFactura === 'function') {
+        mostrarFactura(venta);
     } else {
-        // Si fue una venta normal, mostramos el ticket detallado con la descripción de lo comprado
-        alert(`--- TICKET DE VENTA ---\n` +
-              `Cliente: ${venta.cliente || 'General'}\n` +
-              `Fecha: ${venta.fecha || 'N/A'} - ${venta.hora || ''}\n` +
-              `Detalle / Productos: ${venta.detalle || venta.productos || 'Sin descripción'}\n` +
-              `Total USD: $${venta.montoUSD} | Total Bs: Bs. ${venta.montoBS}`);
+        // Fallback por si la función tiene otro nombre en tu código
+        alert("Factura de: " + venta.cliente + " - Total: $" + venta.montoUSD);
     }
+}
 }
 </script>
 <script>
