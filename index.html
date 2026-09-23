@@ -1361,6 +1361,16 @@ function verDetalleVentaHistorial(idVenta) {
         alert("Factura de: " + (venta.cliente || 'General') + " - Total: $" + venta.montoUSD);
     }
 }
+function verDetalleVentaHistorial(idVenta) {
+    const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
+    
+    if (!venta) {
+        alert("No se encontró la información de esta venta.");
+        return;
+    }
+
+    abrirModalFactura(venta);
+}
     window.addEventListener('load', function() {
         setTimeout(function() {
             const splash = document.getElementById('app-splash-screen');
