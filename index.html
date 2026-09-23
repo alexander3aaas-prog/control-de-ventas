@@ -129,7 +129,24 @@
         box-sizing: border-box !important;
     }
 }
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
+    /* Forzamos a que las filas de formularios se apilen en una sola columna limpia */
+    .form-row, .row, .fiscal-form, form {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    /* Las cajas de input, select y textarea ocuparán el 100% estético */
+    input, select, textarea {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 14px !important;
+        padding: 10px 12px !important;
+    }
+    @media screen and (max-width: 768px) {
     /* Forzamos a los contenedores y filas de la sección SENIAT a apilarse en una columna limpia */
     #tab-negocio, #tab-negocio .card, #tab-negocio form {
         width: 100% !important;
