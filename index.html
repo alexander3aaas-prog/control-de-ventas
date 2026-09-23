@@ -37,73 +37,84 @@
     body {
         width: 100% !important;
         overflow-x: hidden !important;
-        padding: 10px !important;
+        padding: 5px !important;
         background-color: var(--bg-app) !important;
-        display: block !important;
     }
     .app-container {
-        display: block !important;
+        display: flex !important;
+        flex-direction: column !important;
         width: 100% !important;
         padding: 0 !important;
     }
     
-    /* Convertimos la barra lateral en una cuadrícula de 6 cuadros grandes en el móvil */
+    /* Barra lateral transformada en barra superior compacta en móvil */
     .sidebar {
         width: 100% !important;
         height: auto !important;
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
-        background: transparent !important;
-        padding: 10px 0 !important;
-        box-shadow: none !important;
-        margin-bottom: 20px;
-        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: white !important;
+        padding: 10px 5px !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        margin-bottom: 12px;
+        align-items: center !important;
     }
     
-    /* El logo o título de la app lo ponemos arriba ocupando todo el ancho */
+    /* Logo centrado arriba */
     .sidebar .logo, .sidebar h1, .sidebar h2, .sidebar .app-title {
-        grid-column: span 2 !important;
+        display: block !important;
+        width: 100% !important;
         text-align: center !important;
-        background: white !important;
-        padding: 15px !important;
-        border-radius: 12px !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
-        margin-bottom: 5px !important;
+        margin-bottom: 8px !important;
+        font-size: 16px !important;
     }
 
-    /* Estilo de los 6 cuadros grandes */
+    /* Contenedor de los iconos en fila horizontal desplazable o distribuida */
+    .sidebar div, .sidebar nav, .sidebar-menu {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        padding-bottom: 4px;
+    }
+
+    /* Estilo de cada botón del menú con su icono y texto pequeño abajo */
     .sidebar a, .sidebar button {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        background: white !important;
-        border: 1px solid var(--border-color, #e2e8f0) !important;
-        border-radius: 14px !important;
-        padding: 22px 10px !important;
-        text-align: center !important;
-        color: var(--text-dark, #1e293b) !important;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
+        font-size: 9px !important;
+        padding: 6px 8px !important;
+        background: transparent !important;
+        border: none !important;
+        color: var(--text-dark, #475569) !important;
+        text-align: center;
+        white-space: nowrap;
         text-decoration: none !important;
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        min-height: 110px !important;
     }
 
-    /* Iconos grandes y vistosos dentro de los cuadros */
+    /* Tamaño de los iconos en la barra superior */
     .sidebar a i, .sidebar button i {
-        font-size: 32px !important;
-        margin-bottom: 10px !important;
+        font-size: 18px !important;
+        margin-bottom: 3px !important;
         color: var(--accent-primary) !important;
     }
 
-    /* Textos visibles y claros para cada cuadro */
-    .sidebar span, .sidebar .menu-text {
-        display: block !important;
-        font-size: 13px !important;
+    /* Botón activo o seleccionado con el estilo elegante */
+    .sidebar a.active, .sidebar button.active, .sidebar a:active {
+        background: var(--accent-primary, #4f46e5) !important;
+        color: white !important;
+        border-radius: 8px !important;
     }
-    
+    .sidebar a.active i, .sidebar button.active i {
+        color: white !important;
+    }
+
     .modal-content, .card, .container, header, main {
         max-width: 100% !important;
         box-sizing: border-box !important;
