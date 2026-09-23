@@ -47,7 +47,7 @@
         padding: 0 !important;
     }
     
-    /* Barra lateral transformada en barra superior compacta en móvil */
+    /* Contenedor del menú en móvil */
     .sidebar {
         width: 100% !important;
         height: auto !important;
@@ -72,43 +72,46 @@
         font-size: 16px !important;
     }
 
-    /* Contenedor de los iconos en fila horizontal desplazable o distribuida */
+    /* Forzamos a los iconos a ponerse estrictamente en una sola fila horizontal */
     .sidebar div, .sidebar nav, .sidebar-menu {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: space-around !important;
+        justify-content: space-between !important;
+        align-items: center !important;
         width: 100% !important;
-        overflow-x: auto !important;
-        padding-bottom: 4px;
+        padding: 0 5px !important;
     }
 
-    /* Estilo de cada botón del menú con su icono y texto pequeño abajo */
+    /* Ocultamos por completo los textos de los iconos para que no estorben */
+    .sidebar span, .sidebar .menu-text {
+        display: none !important;
+    }
+
+    /* Estilo de los botones limpios solo con iconos */
     .sidebar a, .sidebar button {
         display: flex !important;
-        flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 9px !important;
-        padding: 6px 8px !important;
+        font-size: 20px !important;
+        padding: 10px !important;
         background: transparent !important;
         border: none !important;
         color: var(--text-dark, #475569) !important;
-        text-align: center;
-        white-space: nowrap;
         text-decoration: none !important;
+        flex: 1;
+        text-align: center;
     }
 
-    /* Tamaño de los iconos en la barra superior */
+    /* Tamaño y color de los iconos */
     .sidebar a i, .sidebar button i {
-        font-size: 18px !important;
-        margin-bottom: 3px !important;
+        font-size: 22px !important;
+        margin: 0 !important;
         color: var(--accent-primary) !important;
     }
 
-    /* Botón activo o seleccionado con el estilo elegante */
-    .sidebar a.active, .sidebar button.active, .sidebar a:active {
+    /* Botón activo con fondo elegante */
+    .sidebar a.active, .sidebar button.active {
         background: var(--accent-primary, #4f46e5) !important;
-        color: white !important;
         border-radius: 8px !important;
     }
     .sidebar a.active i, .sidebar button.active i {
