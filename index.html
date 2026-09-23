@@ -1179,44 +1179,48 @@ alert("¡Cuenta marcada como PAGADA!");
 }
 
 function cargarHistorialAcumulado() {
-const rangoDias = document.getElementById("filtroRango").value;
-const tbody = document.getElementById("tablaHistorialRango");
-if (!tbody) return;
-tbody.innerHTML = "";
+    const tbody = document.getElementById("tablaHistorialRango");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    
+    let acumuladoUSD = 0, acumuladoBS = 0, cantVentas = 0;
+    const rangoDias = document.getElementById("filtroRango") ? document.getElementById("filtroRango").value : "todos";
+    const hoy = new Date();
 
-const hoy = new Date();
-let acumuladoUSD = 0, acumuladoBS = 0, cantVentas = 0;
+    ventasGlobales.forEach(v => {
+        const diferenciaDias = Math.floor((hoy - new Date(v.fecha + "T00:00:00")) / (1000 * 60 * 60 * 24));
+        if (rangoDias === "todos" || diferenciaDias <= parseInt(rangoDias)) {
+            cantVentas++;
+            acumuladoUSD += v.montoUSD;
+            acumuladoBS += v.montoBS;
+            const badgeClass = v.estado === 'Pagado' ? 'badge-pagado' : 'badge-pendiente';
 
-ventasGlobales.forEach(v => {
-const diferenciaDias = Math.floor((hoy - new Date(v.fecha + "T00:00:00")) / (1000 * 60 * 60 * 24));
-if (rangoDias === "todos" || diferenciaDias <= parseInt(rangoDias)) {
-acumuladoUSD += v.montoUSD;
-acumuladoBS += v.montoBS;
-cantVentas++;
+            tbody.innerHTML += `
+                <tr>
+                    <td>${v.fecha}</td>
+                    <td>${v.hora}</td>
+                    <td>${v.cliente}</td>
+                    <td>${v.detalle}</td>
+                    <td>$${v.montoUSD.toFixed(2)}</td>
+                    <td>Bs. ${v.montoBS.toFixed(2)}</td>
+                    <td>
+                        <button onclick="mostrarTicketHistorial('${v.timestamp || v.id}')" class="badge ${badgeClass}" style="border: none; cursor: pointer; font-weight: bold;">
+                            ${v.estado}
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+    });
 
-const badgeClass = v.estado === 'Pagado' ? 'badge-pagado' : 'badge-pendiente';
-
-tbody.innerHTML += `
-            <tr>
-                <td>${v.fecha}</td>
-                <td>${v.hora}</td>
-                <td>${v.cliente}</td>
-                <td>${v.detalle}</td>
-                <td>$${v.montoUSD.toFixed(2)}</td>
-                <td>Bs. ${v.montoBS.toFixed(2)}</td>
-                <td>
-                    <button onclick="mostrarTicketHistorial('${v.timestamp || v.id}')" class="badge ${badgeClass}" style="border: none; cursor: pointer; font-weight: bold;">
-                        ${v.estado}
-                    </button>
-                </td>
-            </tr>
-        `;
-});
-
+    if (document.getElementById("histTotalUSD")) document.getElementById("histTotalUSD").innerText = "$" + acumuladoUSD.toFixed(2);
+    if (document.getElementById("histTotalBS")) document.getElementById("histTotalBS").innerText = "(" + acumuladoBS.toFixed(2) + " Bs)";
+    if (document.getElementById("histCantVentas")) document.getElementById("histCantVentas").innerText = cantVentas;
+}
 document.getElementById("histTotalUSD").innerText = "$" + acumuladoUSD.toFixed(2);
 document.getElementById("histTotalBS").innerText = "(" + acumuladoBS.toFixed(2) + " Bs)";
 document.getElementById("histCantVentas").innerText = cantVentas;
-}
+
 
 function cargarDatosNegocioUI() {
 const datos = JSON.parse(localStorage.getItem('cfg_negocio')) || {
@@ -1424,6 +1428,50 @@ function mostrarTicketHistorial(idVenta) {
             `);
             ventanaFalsa.document.close();
         }
+    }
+}
+// Función para mostrar el ticket de la venta seleccionada en el historial
+function mostrarTicketHistorial(idVenta) {
+    const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
+    
+    if (!venta) {
+        alert("No se encontró la información de esta venta.");
+        return;
+    }
+
+    // Abre una ventana flotante limpia y profesional con los datos de la factura
+    const ventanaTicket = window.open('', '_blank', 'width=400,height=600');
+    if (ventanaTicket) {
+        ventanaTicket.document.write(`
+            <html>
+            <head>
+                <title>Ticket de Venta</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; color: #333; }
+                    h2 { margin-bottom: 5px; }
+                    .detalles { text-align: left; margin: 20px 0; font-size: 14px; border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 10px 0; }
+                    .totales { font-size: 16px; font-weight: bold; margin-top: 15px; }
+                    button { background: #007bff; color: white; border: none; padding: 10px 20px; font-size: 14px; cursor: pointer; border-radius: 5px; margin-top: 20px; }
+                </style>
+            </head>
+            <body>
+                <h2>TICKET DE VENTA</h2>
+                <p><b>Cliente:</b> ${venta.cliente || 'General'}</p>
+                <p><b>Fecha:</b> ${venta.fecha} - ${venta.hora}</p>
+                <div class="detalles">
+                    <b>Productos / Detalle:</b><br>
+                    <p style="white-space: pre-line; margin: 5px 0;">${venta.detalle}</p>
+                </div>
+                <div class="totales">
+                    <p>Total USD: $${Number(venta.montoUSD).toFixed(2)}</p>
+                    <p>Total Bs: Bs. ${Number(venta.montoBS).toFixed(2)}</p>
+                </div>
+                <p><b>Estado:</b> ${venta.estado}</p>
+                <button onclick="window.print()">Imprimir Ticket</button>
+            </body>
+            </html>
+        `);
+        ventanaTicket.document.close();
     }
 }
 </script>
