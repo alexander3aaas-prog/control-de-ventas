@@ -37,67 +37,71 @@
     body {
         width: 100% !important;
         overflow-x: hidden !important;
-        padding: 5px !important;
+        padding: 10px !important;
+        background-color: var(--bg-app) !important;
         display: block !important;
     }
     .app-container {
-        padding: 10px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
         display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
     }
     
-    /* Contenedor general de la barra lateral en móvil */
+    /* Convertimos la barra lateral en una cuadrícula de 6 cuadros grandes en el móvil */
     .sidebar {
         width: 100% !important;
         height: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        background: white !important;
-        padding: 10px !important;
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 1000 !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        margin-bottom: 15px;
-        align-items: center !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        background: transparent !important;
+        padding: 10px 0 !important;
+        box-shadow: none !important;
+        margin-bottom: 20px;
+        position: relative !important;
     }
     
-    /* El logo o título queda arriba ocupando todo el ancho */
+    /* El logo o título de la app lo ponemos arriba ocupando todo el ancho */
     .sidebar .logo, .sidebar h1, .sidebar h2, .sidebar .app-title {
-        display: block !important;
-        width: 100% !important;
+        grid-column: span 2 !important;
         text-align: center !important;
-        margin-bottom: 10px !important;
+        background: white !important;
+        padding: 15px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+        margin-bottom: 5px !important;
     }
 
-    /* Los enlaces o botones del menú se colocan en fila horizontal uno al lado del otro */
+    /* Estilo de los 6 cuadros grandes */
     .sidebar a, .sidebar button {
-        display: inline-flex !important;
+        display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 10px !important;
-        padding: 8px 10px !important;
-        background: transparent !important;
-        border: none !important;
+        background: white !important;
+        border: 1px solid var(--border-color, #e2e8f0) !important;
+        border-radius: 14px !important;
+        padding: 22px 10px !important;
+        text-align: center !important;
+        color: var(--text-dark, #1e293b) !important;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
+        text-decoration: none !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        min-height: 110px !important;
+    }
+
+    /* Iconos grandes y vistosos dentro de los cuadros */
+    .sidebar a i, .sidebar button i {
+        font-size: 32px !important;
+        margin-bottom: 10px !important;
         color: var(--accent-primary) !important;
-        text-align: center;
-        flex: 1;
     }
 
-    /* Forzamos a que los elementos internos del menú fluyan en fila horizontal debajo del logo */
-    .sidebar div, .sidebar nav {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-around !important;
-        width: 100% !important;
-        flex-wrap: wrap !important;
-    }
-
-    /* Ocultamos los textos largos para que solo queden los iconos limpios */
-    .sidebar span:not(.icon), .sidebar .menu-text {
-        display: none !important;
+    /* Textos visibles y claros para cada cuadro */
+    .sidebar span, .sidebar .menu-text {
+        display: block !important;
+        font-size: 13px !important;
     }
     
     .modal-content, .card, .container, header, main {
