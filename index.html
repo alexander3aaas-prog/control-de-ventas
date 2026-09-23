@@ -32,11 +32,21 @@
 --radius-md: 10px;
 --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
-/* Adaptabilidad automática para teléfonos móviles */
+/* Adaptabilidad automática y limpia para teléfonos móviles */
 @media screen and (max-width: 768px) {
     body {
         width: 100% !important;
         overflow-x: hidden !important;
+        flex-direction: column !important;
+    }
+    .app-container {
+        flex-direction: column !important;
+        padding: 5px !important;
+    }
+    .sidebar {
+        width: 100% !important;
+        height: auto !important;
+        margin-bottom: 15px;
     }
     .modal-content, .card, .container, header, main {
         max-width: 100% !important;
