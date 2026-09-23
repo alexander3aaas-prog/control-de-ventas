@@ -47,7 +47,7 @@
         padding: 0 !important;
     }
     
-    /* Contenedor del menú en móvil */
+    /* Contenedor principal de la barra: logo arriba y barra abajo */
     .sidebar {
         width: 100% !important;
         height: auto !important;
@@ -63,58 +63,65 @@
         align-items: center !important;
     }
     
-    /* Logo centrado arriba */
+    /* El logo queda fijo arriba ocupando todo el ancho centrado */
     .sidebar .logo, .sidebar h1, .sidebar h2, .sidebar .app-title {
         display: block !important;
         width: 100% !important;
         text-align: center !important;
         margin-bottom: 8px !important;
-        font-size: 16px !important;
     }
 
-    /* Forzamos a los iconos a ponerse estrictamente en una sola fila horizontal */
+    /* Contenedor interno de los iconos en fila horizontal con desplazamiento suave */
     .sidebar div, .sidebar nav, .sidebar-menu {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
         align-items: center !important;
         width: 100% !important;
-        padding: 0 5px !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        padding-bottom: 5px !important;
+        gap: 8px !important;
     }
 
-    /* Ocultamos por completo los textos de los iconos para que no estorben */
+    /* Mostramos los textos de los iconos ordenados debajo de cada uno como en tu foto */
     .sidebar span, .sidebar .menu-text {
-        display: none !important;
+        display: block !important;
+        font-size: 10px !important;
+        text-align: center !important;
+        margin-top: 2px !important;
     }
 
-    /* Estilo de los botones limpios solo con iconos */
+    /* Estilo de los botones del menú */
     .sidebar a, .sidebar button {
         display: flex !important;
+        flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 20px !important;
-        padding: 10px !important;
+        font-size: 10px !important;
+        padding: 6px 10px !important;
         background: transparent !important;
         border: none !important;
         color: var(--text-dark, #475569) !important;
         text-decoration: none !important;
-        flex: 1;
-        text-align: center;
+        flex-shrink: 0 !important;
+        border-radius: 8px !important;
     }
 
-    /* Tamaño y color de los iconos */
+    /* Tamaño de los iconos */
     .sidebar a i, .sidebar button i {
-        font-size: 22px !important;
-        margin: 0 !important;
+        font-size: 18px !important;
+        margin-bottom: 2px !important;
         color: var(--accent-primary) !important;
     }
 
-    /* Botón activo con fondo elegante */
+    /* Botón activo con el fondo azul y bordes redondeados idéntico a la imagen */
     .sidebar a.active, .sidebar button.active {
-        background: var(--accent-primary, #4f46e5) !important;
-        border-radius: 8px !important;
+        background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+        color: white !important;
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3) !important;
     }
-    .sidebar a.active i, .sidebar button.active i {
+    .sidebar a.active i, .sidebar button.active i, .sidebar a.active span, .sidebar button.active span {
         color: white !important;
     }
 
