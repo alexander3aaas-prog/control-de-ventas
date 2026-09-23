@@ -1337,15 +1337,17 @@ link.download = nombreArchivo;
 link.click();
 }
 // Función para ver el detalle o factura desde el historial al hacer clic en el botón
+// Función para ver el detalle de la venta o la factura desde el historial
 function verDetalleVentaHistorial(idVenta) {
     // Buscamos la venta en el historial global
-    const venta = ventasGlobales.find(v => v.id === idVenta || v.timestamp === idVenta);
+    const venta = ventasGlobales.find(v => v.id == idVenta || v.timestamp == idVenta);
+    
     if (!venta) {
         alert("No se encontró la información de esta venta.");
         return;
     }
 
-    // Si la venta tiene asociado un número de factura o datos fiscales, abrimos la factura oficial
+    // Si la venta tiene factura fiscal, abrimos el modal de factura
     if (venta.numeroFactura || venta.conFactura) {
         if (typeof abrirModalFactura === 'function') {
             abrirModalFactura(venta);
@@ -1353,12 +1355,11 @@ function verDetalleVentaHistorial(idVenta) {
             alert(`Factura N°: ${venta.numeroFactura || 'S/N'}\nCliente: ${venta.cliente}\nTotal: $${venta.montoUSD}`);
         }
     } else {
-        // Si fue una venta normal sin factura, mostramos el ticket detallado con la descripción de lo comprado
+        // Si fue una venta normal, mostramos el ticket detallado con la descripción de lo comprado
         alert(`--- TICKET DE VENTA ---\n` +
-              `Cliente: ${venta.cliente}\n` +
-              `Fecha: ${venta.fecha} - ${venta.hora}\n` +
-              `Detalle / Productos: ${venta.detalle}\n` +
-              `Categoría: ${venta.categoria}\n` +
+              `Cliente: ${venta.cliente || 'General'}\n` +
+              `Fecha: ${venta.fecha || 'N/A'} - ${venta.hora || ''}\n` +
+              `Detalle / Productos: ${venta.detalle || venta.productos || 'Sin descripción'}\n` +
               `Total USD: $${venta.montoUSD} | Total Bs: Bs. ${venta.montoBS}`);
     }
 }
