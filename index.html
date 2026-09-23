@@ -250,13 +250,26 @@ body * { visibility: hidden; }
 </div>
 
 <div style="background: #f8fafc; padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 15px;">
-<label style="color: var(--accent-primary); font-size: 13px; margin-bottom: 10px;"><i class="fa-solid fa-id-card"></i> Datos del Cliente / Solicitante (SENIAT)</label>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 0;">
-<div><label id="lblCliente">Nombre / Razón Social</label><input type="text" id="nombreCliente" placeholder="Ej: Dr. Pérez / Juan Delgado"></div>
-<div><label>Cédula / RIF</label><input type="text" id="rifCliente" placeholder="Ej: V-12345678"></div>
-<div><label>Teléfono</label><input type="text" id="telefonoCliente" placeholder="Ej: 0412-1234567"></div>
-<div><label>Dirección / Área</label><input type="text" id="dirCliente" placeholder="Ej: Emergencia / Valencia"></div>
-</div>
+    <label style="color: var(--accent-primary); font-size: 13px; margin-bottom: 10px; display: block;"><i class="fa-solid fa-id-card"></i> Datos del Cliente / Solicitante (SENIAT)</label>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px;">
+        <div>
+            <label id="lblCliente">Nombre / Razón Social</label>
+            <input type="text" id="nombreCliente" placeholder="Ej: Juan Delgado">
+        </div>
+        <div>
+            <label>Cédula / RIF</label>
+            <input type="text" id="rifCliente" placeholder="Ej: V-12345678">
+        </div>
+        <div>
+            <label>Teléfono</label>
+            <input type="text" id="telefonoCliente" placeholder="Ej: 0412-1234567">
+        </div>
+        <div>
+            <label>Dirección / Área</label>
+            <input type="text" id="dirCliente" placeholder="Ej: Emergencia">
+        </div>
+    </div>
 </div>
 
 <div class="grid-3">
