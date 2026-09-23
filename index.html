@@ -1203,9 +1203,11 @@ tbody.innerHTML += `
                        <td>${v.cliente}</td>
                        <td>${v.detalle}</td>
                        <td>$${v.montoUSD.toFixed(2)}</td>
-                       <td><strong style="color:var(--accent-primary);">${v.montoBS.toFixed(2)} Bs.</strong></td>
-                       <td><span class="badge ${badgeClass}">${v.estado}</span></td>
-                   </tr>
+                   <td>
+    <button onclick="verDetalleVentaHistorial('${v.id || v.timestamp}')" class="badge ${badgeClass}" style="border: none; cursor: pointer; font-weight: bold;">
+        ${v.estado} 👁️
+    </button>
+</td>
                `;
 }
 });
