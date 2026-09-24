@@ -1490,7 +1490,68 @@ function mostrarTicketHistorial(idVenta) {
 
     // Evento para imprimir el ticket actual
     document.getElementById("btnImprimirModal").addEventListener("click", () => {
+   function mostrarTicketHistorial(idVenta) {
+    const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
+    
+    if (!venta) {
+        alert("No se encontró la información de esta venta.");
+        return;
+    }
+
+    const modalAnterior = document.getElementById("modalTicketFlotante");
+    if (modalAnterior) modalAnterior.remove();
+
+    const montoBS = Number(venta.montoBS) || 0;
+    const montoUSD = Number(venta.montoUSD) || 0;
+    const tasa = venta.tasaCambio || (montoBS > 0 && montoUSD > 0 ? (montoBS / montoUSD).toFixed(2) : 'N/A');
+
+    const modalDiv = document.createElement("div");
+    modalDiv.id = "modalTicketFlotante";
+    modalDiv.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 15px; box-sizing: border-box;";
+
+    modalDiv.innerHTML = `
+        <div style="background: #fff; width: 100%; max-width: 380px; padding: 25px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); font-family: Arial, sans-serif; text-align: center; max-height: 90vh; overflow-y: auto;">
+            <h3 style="margin: 0 0 5px 0; font-size: 18px; text-transform: uppercase;">FACTURA</h3>
+            <p style="font-size: 12px; color: #555; margin: 2px 0; font-weight: bold;">Alexander Alvarado torrealba</p>
+            <p style="font-size: 11px; color: #666; margin: 2px 0;">RIF: V-123686671</p>
+            <p style="font-size: 11px; color: #666; margin: 2px 0;">Calle Sucre, cruze con mariño, sector la romana, casa 3-67, urbanización Ricardo urriera, Valencia, Carabobo</p>
+            <p style="font-size: 11px; color: #666; margin: 2px 0 10px 0;">TEL: 04144384410</p>
+            
+            <div style="border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 10px 0; text-align: left; font-size: 12px; margin: 10px 0;">
+                <p style="margin: 3px 0;"><b>FECHA:</b> ${venta.fecha} - ${venta.hora}</p>
+                <p style="margin: 3px 0;"><b>CLIENTE:</b> ${venta.cliente || 'Contado General'}</p>
+                <p style="margin: 3px 0;"><b>ESTADO:</b> <span style="font-weight:bold; color:${venta.estado === 'Pagado' ? '#28a745' : '#dc3545'};">${venta.estado}</span></p>
+            </div>
+
+            <div style="text-align: left; font-size: 12px; margin: 10px 0; min-height: 40px;">
+                <b>Productos / Detalle:</b><br>
+                <p style="white-space: pre-line; margin: 5px 0; color: #333;">${venta.detalle}</p>
+            </div>
+
+            <div style="border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 10px 0; text-align: right; font-size: 13px; margin: 10px 0;">
+                <p style="margin: 4px 0;">TASA: <b>${tasa} Bs/$</b></p>
+                <p style="margin: 4px 0; font-size: 15px; color: #000;">TOTAL A PAGAR (Bs): <b>Bs. ${montoBS.toFixed(2)}</b></p>
+            </div>
+
+            <p style="font-size: 11px; margin: 15px 0 5px 0; font-style: italic;">*** GRACIAS POR SU COMPRA ***</p>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button id="btnCerrarModal" style="flex: 1; background: #dc3545; color: white; border: none; padding: 10px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer;">Cancelar</button>
+                <button id="btnImprimirModal" style="flex: 1; background: #28a745; color: white; border: none; padding: 10px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer;">🖨️ Imprimir</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modalDiv);
+
+    document.getElementById("btnCerrarModal").addEventListener("click", () => {
+        modalDiv.remove();
+    });
+
+    document.getElementById("btnImprimirModal").addEventListener("click", () => {
         window.print();
+    });
+}     window.print();
     });
 }
 
