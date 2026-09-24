@@ -1439,41 +1439,99 @@ function mostrarTicketHistorial(idVenta) {
         return;
     }
 
-    // Abre una ventana flotante limpia y profesional con los datos de la factura
-    const ventanaTicket = window.open('', '_blank', 'width=400,height=600');
+    const ventanaTicket = window.open('', '_blank', 'width=400,height=650');
     if (ventanaTicket) {
         ventanaTicket.document.write(`
             <html>
             <head>
                 <title>Ticket de Venta</title>
                 <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; color: #333; }
-                    h2 { margin-bottom: 5px; }
-                    .detalles { text-align: left; margin: 20px 0; font-size: 14px; border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 10px 0; }
-                    .totales { font-size: 16px; font-weight: bold; margin-top: 15px; }
-                    button { background: #007bff; color: white; border: none; padding: 10px 20px; font-size: 14px; cursor: pointer; border-radius: 5px; margin-top: 20px; }
+                    body {
+                        font-family: 'Courier New', Courier, monospace;
+                        width: 300px;
+                        margin: 20px auto;
+                        padding: 15px;
+                        background: #fff;
+                        color: #000;
+                        text-align: center;
+                    }
+                    h2 {
+                        font-size: 18px;
+                        margin-bottom: 5px;
+                        text-transform: uppercase;
+                    }
+                    .info {
+                        font-size: 13px;
+                        margin: 5px 0;
+                        text-align: left;
+                    }
+                    .detalles {
+                        text-align: left;
+                        margin: 15px 0;
+                        font-size: 13px;
+                        border-top: 1px dashed #000;
+                        border-bottom: 1px dashed #000;
+                        padding: 10px 0;
+                    }
+                    .totales {
+                        font-size: 14px;
+                        font-weight: bold;
+                        text-align: right;
+                        margin-top: 10px;
+                    }
+                    .totales p {
+                        margin: 4px 0;
+                    }
+                    .estado {
+                        margin-top: 15px;
+                        font-size: 14px;
+                        font-weight: bold;
+                    }
+                    button {
+                        background: #000;
+                        color: white;
+                        border: none;
+                        padding: 10px 15px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        border-radius: 4px;
+                        margin-top: 20px;
+                        width: 100%;
+                    }
+                    @media print {
+                        button { display: none; }
+                        body { width: 100%; margin: 0; padding: 0; }
+                    }
                 </style>
             </head>
             <body>
                 <h2>TICKET DE VENTA</h2>
-                <p><b>Cliente:</b> ${venta.cliente || 'General'}</p>
-                <p><b>Fecha:</b> ${venta.fecha} - ${venta.hora}</p>
+                <div class="info"><b>Cliente:</b> ${venta.cliente || 'General'}</div>
+                <div class="info"><b>Fecha:</b> ${venta.fecha} - ${venta.hora}</div>
+                
                 <div class="detalles">
                     <b>Productos / Detalle:</b><br>
                     <p style="white-space: pre-line; margin: 5px 0;">${venta.detalle}</p>
                 </div>
+                
                 <div class="totales">
                     <p>Total USD: $${Number(venta.montoUSD).toFixed(2)}</p>
                     <p>Total Bs: Bs. ${Number(venta.montoBS).toFixed(2)}</p>
                 </div>
-                <p><b>Estado:</b> ${venta.estado}</p>
-                <button onclick="window.print()">Imprimir Ticket</button>
+                
+                <div class="estado">
+                    Estado: ${venta.estado}
+                </div>
+
+                <p style="margin-top: 20px; font-size: 12px;">Thank You</p>
+                <button onclick="window.print()">🖨️ Imprimir Ticket</button>
             </body>
             </html>
         `);
         ventanaTicket.document.close();
     }
 }
+
 </script>
 </body>
 </html>
