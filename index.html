@@ -1430,7 +1430,7 @@ function mostrarTicketHistorial(idVenta) {
         }
     }
 }
-// Función para mostrar el ticket de la venta seleccionada en el historial
+// Función para mostrar el ticket flotante superpuesto en la misma página
 function mostrarTicketHistorial(idVenta) {
     const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
     
@@ -1439,113 +1439,59 @@ function mostrarTicketHistorial(idVenta) {
         return;
     }
 
-    const ventanaTicket = window.open('', '_blank', 'width=450,height=700');
-    if (ventanaTicket) {
-        ventanaTicket.document.write(`
-            <html>
-            <head>
-                <title>Ticket de Venta</title>
-                <style>
-                    body {
-                        font-family: 'Courier New', Courier, monospace;
-                        background-color: #eef2f5;
-                        margin: 0;
-                        padding: 30px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        min-height: 100vh;
-                    }
-                    .ticket-card {
-                        background: #fff;
-                        width: 320px;
-                        padding: 20px;
-                        border-radius: 8px;
-                        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-                        text-align: center;
-                        box-sizing: border-box;
-                    }
-                    h2 {
-                        font-size: 18px;
-                        margin-bottom: 8px;
-                        text-transform: uppercase;
-                    }
-                    .info {
-                        font-size: 13px;
-                        margin: 6px 0;
-                        text-align: left;
-                    }
-                    .detalles {
-                        text-align: left;
-                        margin: 15px 0;
-                        font-size: 13px;
-                        border-top: 1px dashed #333;
-                        border-bottom: 1px dashed #333;
-                        padding: 10px 0;
-                    }
-                    .totales {
-                        font-size: 14px;
-                        font-weight: bold;
-                        text-align: right;
-                        margin-top: 12px;
-                    }
-                    .totales p {
-                        margin: 4px 0;
-                    }
-                    .estado {
-                        margin-top: 15px;
-                        font-size: 14px;
-                        font-weight: bold;
-                    }
-                    button {
-                        background: #000;
-                        color: white;
-                        border: none;
-                        padding: 12px;
-                        font-size: 14px;
-                        cursor: pointer;
-                        border-radius: 5px;
-                        margin-top: 20px;
-                        width: 100%;
-                    }
-                    button:hover {
-                        background: #333;
-                    }
-                    @media print {
-                        body { background: #fff; padding: 0; display: block; }
-                        .ticket-card { box-shadow: none; width: 100%; padding: 0; }
-                        button { display: none; }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="ticket-card">
-                    <h2>TICKET DE VENTA</h2>
-                    <div class="info"><b>Cliente:</b> ${venta.cliente || 'General'}</div>
-                    <div class="info"><b>Fecha:</b> ${venta.fecha} - ${venta.hora}</div>
-                    
-                    <div class="detalles">
-                        <b>Productos / Detalle:</b><br>
-                        <p style="white-space: pre-line; margin: 6px 0;">${venta.detalle}</p>
-                    </div>
-                    
-                    <div class="totales">
-                        <p>Total USD: $${Number(venta.montoUSD).toFixed(2)}</p>
-                        <p>Total Bs: Bs. ${Number(venta.montoBS).toFixed(2)}</p>
-                    </div>
-                    
-                    <div class="estado">
-                        Estado: ${venta.estado}
-                    </div>
+    // Buscar si ya existe un modal anterior y eliminarlo para evitar duplicados
+    const modalAnterior = document.getElementById("modalTicketFlotante");
+    if (modalAnterior) modalAnterior.remove();
 
-                    <p style="margin-top: 15px; font-size: 12px; color: #555;">Thank You</p>
-                    <button onclick="window.print()">🖨️ Imprimir Ticket</button>
-                </div>
-            </body>
-            </html>
-        `);
-        ventanaTicket.document.close();
-    }
+    // Crear el contenedor principal del modal oscuro semitransparente
+    const modalDiv = document.createElement("div");
+    modalDiv.id = "modalTicketFlotante";
+    modalDiv.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 15px; box-sizing: border-box;";
+
+    modalDiv.innerHTML = `
+        <div style="background: #fff; width: 100%; max-width: 380px; padding: 25px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); font-family: Arial, sans-serif; text-align: center; max-height: 90vh; overflow-y: auto;">
+            <h3 style="margin: 0 0 5px 0; font-size: 18px; text-transform: uppercase;">FACTURA</h3>
+            <p style="font-size: 12px; color: #555; margin: 2px 0;">Alexander Alvarado torrealba</p>
+            <p style="font-size: 11px; color: #666; margin: 2px 0;">RIF: V-123686671</p>
+            <p style="font-size: 11px; color: #666; margin: 2px 0;">Calle Sucre, cruze con mariño, sector la romana...</p>
+            <p style="font-size: 11px; color: #666; margin: 2px 0 10px 0;">TEL: 04144384410</p>
+            
+            <div style="border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 10px 0; text-align: left; font-size: 12px; margin: 10px 0;">
+                <p style="margin: 3px 0;"><b>FECHA:</b> ${venta.fecha} - ${venta.hora}</p>
+                <p style="margin: 3px 0;"><b>CLIENTE:</b> ${venta.cliente || 'Contado General'}</p>
+                <p style="margin: 3px 0;"><b>ESTADO:</b> <span style="font-weight:bold; color:${venta.estado === 'Pagado' ? '#28a745' : '#dc3545'};">${venta.estado}</span></p>
+            </div>
+
+            <div style="text-align: left; font-size: 12px; margin: 10px 0; min-height: 40px;">
+                <b>Detalle / Productos:</b><br>
+                <p style="white-space: pre-line; margin: 5px 0; color: #333;">${venta.detalle}</p>
+            </div>
+
+            <div style="border-top: 1px dashed #ccc; padding-top: 10px; text-align: right; font-size: 13px;">
+                <p style="margin: 4px 0;">Total USD: <b>$${Number(venta.montoUSD).toFixed(2)}</b></p>
+                <p style="margin: 4px 0; font-size: 15px;">Total Bs: <b>Bs. ${Number(venta.montoBS).toFixed(2)}</b></p>
+            </div>
+
+            <p style="font-size: 11px; margin: 15px 0 5px 0; font-style: italic;">*** GRACIAS POR SU COMPRA ***</p>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button id="btnCerrarModal" style="flex: 1; background: #dc3545; color: white; border: none; padding: 10px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer;">Cancelar</button>
+                <button id="btnImprimirModal" style="flex: 1; background: #28a745; color: white; border: none; padding: 10px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer;">🖨️ Imprimir</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modalDiv);
+
+    // Evento para cerrar el modal al hacer clic en Cancelar
+    document.getElementById("btnCerrarModal").addEventListener("click", () => {
+        modalDiv.remove();
+    });
+
+    // Evento para imprimir el ticket actual
+    document.getElementById("btnImprimirModal").addEventListener("click", () => {
+        window.print();
+    });
 }
 
 </script>
