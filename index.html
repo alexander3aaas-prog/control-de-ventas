@@ -1490,9 +1490,8 @@ function mostrarTicketHistorial(idVenta) {
 
     // Evento para imprimir el ticket actual
     document.getElementById("btnImprimirModal").addEventListener("click", () => {
-        window.print();
-    });
-}
+   function mostrarTicketHistorial(idVenta) {
+    const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
     
     if (!venta) {
         alert("No se encontró la información de esta venta.");
