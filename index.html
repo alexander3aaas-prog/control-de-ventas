@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control de Ventas e Inventario</title>
+<title>Control de Ventas e Inventario - MiControl</title>
 
-<!-- Icono PWA para Acceso Directo / App en el Celular -->
+<!-- Icono PWA para Acceso Directo -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%236366f1'/><path d='M256 96L128 160v192l128 64 128-64V160L256 96zm0 42.6L348 185 256 231 164 185l92-46.4z' fill='%23ffffff'/></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%236366f1'/><path d='M256 96L128 160v192l128 64 128-64V160L256 96zm0 42.6L348 185 256 231 164 185l92-46.4z' fill='%23ffffff'/></svg>">
 <meta name="mobile-web-app-capable" content="yes">
@@ -17,22 +17,27 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Supabase JS Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
---bg-app: #f3f4f8;
---sidebar-bg: #ffffff;
---card-bg: #ffffff;
---accent-primary: #5c55e6;
---accent-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
---text-dark: #1e293b;
---text-muted: #64748b;
---text-light: #94a3b8;
---border-color: #e2e8f0;
---radius-lg: 16px;
---radius-md: 10px;
---shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --bg-app: #f3f4f8;
+  --sidebar-bg: #ffffff;
+  --card-bg: #ffffff;
+  --accent-primary: #5c55e6;
+  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --border-color: #e2e8f0;
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
-/* Estilos para el Login Elegante */
+
+* { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
+body { background-color: var(--bg-app); color: var(--text-dark); display: flex; min-height: 100vh; }
+
+/* Estilos Login */
 #loginOverlay {
     position: fixed;
     top: 0;
@@ -68,39 +73,18 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.login-card h2 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    letter-spacing: 0.5px;
-}
-
-.login-card p {
-    font-size: 13px;
-    color: #94a3b8;
-    margin-bottom: 28px;
-}
-
-.login-input-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.login-input-group label {
-    display: block;
-    font-size: 12px;
-    color: #cbd5e1;
-    margin-bottom: 6px;
-    font-weight: 600;
-}
+.login-card h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
+.login-card p { font-size: 13px; color: #94a3b8; margin-bottom: 28px; }
+.login-input-group { margin-bottom: 20px; text-align: left; }
+.login-input-group label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 6px; font-weight: 600; }
 
 .login-input-group input {
   width: 100%;
   padding: 12px 16px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: #0f172a !important; /* Fondo oscuro fijo */
-  color: #ffffff !important;       /* Texto blanco siempre visible */
+  background-color: #0f172a !important;
+  color: #ffffff !important;
   font-size: 14px;
   box-sizing: border-box;
   outline: none;
@@ -109,18 +93,7 @@
 
 .login-input-group input:focus {
   border-color: #6366f1;
-  background-color: #0f172a !important;
-  color: #ffffff !important;
   box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
-}
-
-/* Evita que el navegador ponga el fondo blanco cuando autocompleta */
-.login-input-group input:-webkit-autofill,
-.login-input-group input:-webkit-autofill:hover, 
-.login-input-group input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #ffffff !important;
-  -webkit-box-shadow: 0 0 0px 1000px #0f172a inset !important;
-  transition: background-color 5000s ease-in-out 0s;
 }
 
 .btn-login {
@@ -142,171 +115,11 @@
     box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
 }
 
-.login-error {
-    color: #ef4444;
-    font-size: 12px;
-    margin-top: 12px;
-    display: none;
-}
-/* Adaptabilidad automática y limpia para teléfonos móviles */
-@media screen and (max-width: 768px) {
-    body {
-        width: 100% !important;
-        overflow-x: hidden !important;
-        padding: 5px !important;
-        background-color: var(--bg-app) !important;
-    }
-    .app-container {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        padding: 0 !important;
-    }
-    
-    /* Contenedor principal de la barra en el celular */
-    .sidebar {
-        width: 100% !important;
-        height: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        background: white !important;
-        padding: 10px 5px !important;
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 1000 !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-        margin-bottom: 12px;
-        align-items: center !important;
-    }
-    
-    /* El logo queda fijo arriba ocupando todo el ancho centrado */
-    .sidebar .logo, .sidebar h1, .sidebar h2, .sidebar .app-title {
-        display: block !important;
-        width: 100% !important;
-        text-align: center !important;
-        margin-bottom: 8px !important;
-    }
+.login-error { color: #ef4444; font-size: 12px; margin-top: 12px; display: none; }
 
-    /* Forzamos a cualquier contenedor interno de enlaces a ordenarse estrictamente en fila horizontal */
-    .sidebar div, .sidebar nav, .sidebar-menu, .sidebar ul {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-around !important;
-        align-items: center !important;
-        width: 100% !important;
-        overflow-x: auto !important;
-        padding-bottom: 4px !important;
-    }
-
-    /* Mostramos los textos pequeños debajo de cada icono */
-    .sidebar span, .sidebar .menu-text {
-        display: block !important;
-        font-size: 9px !important;
-        text-align: center !important;
-        margin-top: 2px !important;
-    }
-
-    /* Estilo individual de cada botón de navegación */
-    .sidebar a, .sidebar button {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 9px !important;
-        padding: 6px 8px !important;
-        background: transparent !important;
-        border: none !important;
-        color: var(--text-dark, #475569) !important;
-        text-decoration: none !important;
-        flex: 1 !important;
-        min-width: 0 !important;
-    }
-
-    /* Tamaño de los iconos */
-    .sidebar a i, .sidebar button i {
-        font-size: 18px !important;
-        margin-bottom: 2px !important;
-        color: var(--accent-primary) !important;
-    }
-
-    /* Botón activo con fondo azul elegante idéntico a tu diseño */
-    .sidebar a.active, .sidebar button.active {
-        background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
-        color: white !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3) !important;
-    }
-    .sidebar a.active i, .sidebar button.active i, .sidebar a.active span, .sidebar button.active span {
-        color: white !important;
-    }
-
-    .modal-content, .card, .container, header, main {
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-}
-@media (max-width: 768px) {
-    /* Forzamos a que las filas de formularios se apilen en una sola columna limpia */
-    .form-row, .row, .fiscal-form, form {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 12px !important;
-        width: 100% !important;
-    }
-
-    /* Las cajas de input, select y textarea ocuparán el 100% estético */
-    input, select, textarea {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        font-size: 14px !important;
-        padding: 10px 12px !important;
-    }
-    @media screen and (max-width: 768px) {
-    /* Forzamos a los contenedores y filas de la sección SENIAT a apilarse en una columna limpia */
-    #tab-negocio, #tab-negocio .card, #tab-negocio form {
-        width: 100% !important;
-        padding: 10px !important;
-        box-sizing: border-box !important;
-    }
-
-    /* Convertimos todas las filas de dos columnas en una sola columna fluida */
-    #tab-negocio .grid-2, 
-    #tab-negocio .form-group, 
-    #tab-negocio div[style*="grid"], 
-    #tab-negocio div[style*="display: flex"] {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        gap: 8px !important;
-        float: none !important;
-    }
-
-    /* Hacemos que todas las cajas de texto e inputs ocupen exactamente el 100% del ancho */
-    #tab-negocio input, 
-    #tab-negocio select, 
-    #tab-negocio textarea,
-    #tab-negocio button {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        margin-bottom: 10px !important;
-    }
-}
-
-    /* Las tarjetas o contenedores se adaptan sin desbordarse */
-    .card, .container, .app-container {
-        padding: 10px !important;
-        box-sizing: border-box !important;
-    }
-}
-* { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-body { background-color: var(--bg-app); color: var(--text-dark); display: flex; min-height: 100vh; }
-
+/* Contenedores Principales */
 .app-container { display: flex; width: 100%; }
-
 .sidebar { width: 260px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); padding: 25px 20px; display: flex; flex-direction: column; flex-shrink: 0; }
-
 .sidebar-menu-title { font-size: 11px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-left: 10px; }
 .nav-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 
@@ -390,38 +203,30 @@ td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); font-size
 .ticket-total { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-top: 10px; font-weight: bold; }
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; font-family: 'Plus Jakarta Sans', sans-serif; }
 
-@media print {
-body * { visibility: hidden; }
-#ticketPrintArea, #ticketPrintArea * { visibility: visible; }
-#ticketPrintArea { position: absolute; left: 0; top: 0; width: 100%; font-family: 'Courier New', Courier, monospace; }
-.modal-actions, .modal-overlay { background: transparent; }
+/* Adaptabilidad Móvil Estándar */
+@media screen and (max-width: 768px) {
+    body { width: 100% !important; overflow-x: hidden !important; padding: 5px !important; }
+    .app-container { display: flex !important; flex-direction: column !important; width: 100% !important; padding: 0 !important; }
+    .sidebar { width: 100% !important; height: auto !important; padding: 10px 5px !important; position: sticky !important; top: 0 !important; z-index: 1000 !important; box-shadow: 0 2px 5px rgba(0,0,0,0.08); margin-bottom: 12px; align-items: center !important; }
+    .sidebar .logo { display: block !important; width: 100% !important; text-align: center !important; margin-bottom: 8px !important; }
+    .sidebar ul { display: flex !important; flex-direction: row !important; justify-content: space-around !important; align-items: center !important; width: 100% !important; overflow-x: auto !important; padding-bottom: 4px !important; }
+    .sidebar a, .sidebar button { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; font-size: 9px !important; padding: 6px 8px !important; flex: 1 !important; }
+    .form-row, .grid-2, .grid-3 { display: flex !important; flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+    input, select, textarea { width: 100% !important; max-width: 100% !important; }
 }
 
-  @media (max-width: 768px) {
-    body {
-      overflow-x: hidden;
-    }
-    /* Si la plantilla usa un contenedor principal de dos columnas, lo pasamos a una sola columna en móviles */
-    main, .main-container, .flex {
-      flex-direction: column !important;
-      width: 100% !important;
-      padding: 5px !important;
-    }
-    /* Asegurar que la barra lateral o menús se adapten al ancho del celular */
-    aside, .sidebar, nav {
-      width: 100% !important;
-      position: relative !important;
-    }
-    /* Evitar que las tablas o inputs se salgan de la pantalla */
-    table, input, select, button {
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-    }
-  }
+/* Reglas de Impresión Limpia */
+@media print {
+    body * { visibility: hidden !important; }
+    #ticketPrintArea, #ticketPrintArea *, #modalTicketFlotante, #modalTicketFlotante * { visibility: visible !important; }
+    #ticketPrintArea, #modalTicketFlotante { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; background: white !important; color: black !important; font-family: 'Courier New', Courier, monospace !important; }
+    .modal-actions, #btnCerrarModal, #btnImprimirModal { display: none !important; }
+}
 </style>
 </head>
 <body>
-    <!-- Modal de Login -->
+
+<!-- Modal de Login -->
 <div id="loginOverlay">
     <div class="login-card">
         <h2>Bienvenido</h2>
@@ -443,7 +248,8 @@ body * { visibility: hidden; }
         </form>
     </div>
 </div>
-    <!-- Pantalla de carga animada (Splash Screen) -->
+
+<!-- Pantalla de Carga Animada (Splash Screen) -->
 <div id="app-splash-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 99999; transition: opacity 0.5s ease;">
     <div style="width: 50px; height: 50px; border: 4px solid #e2e8f0; border-top: 4px solid #4f46e5; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
     <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; color: #1e293b; margin-top: 20px; letter-spacing: -0.5px;">MiControl</h2>
@@ -459,7 +265,6 @@ body * { visibility: hidden; }
 
 <div class="app-container">
 <aside class="sidebar">
-<!-- LOGO PROPIO DEL SISTEMA (MiControl) -->
 <div class="logo" style="text-align: center; padding: 10px 0; width: 100%;">
     <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #4f46e5, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; letter-spacing: -0.5px;">
         MiControl
@@ -562,10 +367,11 @@ body * { visibility: hidden; }
         </div>
     </div>
 </div>
+
 <div class="grid-3">
 <div class="select-search-container">
 <label>Buscar Producto</label>
-<input type="text" id="inputProductoText" placeholder="-- Escribe o haz clic para buscar --" autocomplete="off" onfocus="mostrarListaDropdown()" oninput="filtrarListaDropdown()">
+<input type="text" id="inputProductoText" placeholder="-- Escribe o haz clic para buscar --" autocomplete="off" onfocus="mostrarListaDropdown()" oninput="document.getElementById('productoSeleccionadoIndex').value=''; filtrarListaDropdown()">
 <input type="hidden" id="productoSeleccionadoIndex">
 <div id="dropdownMenu" class="dropdown-menu"></div>
 </div>
@@ -722,7 +528,7 @@ body * { visibility: hidden; }
 </main>
 </div>
 
-<!-- MODAL TICKET -->
+<!-- MODAL FACTURA -->
 <div id="modalFactura" class="modal-overlay">
 <div class="modal-content">
 <div id="ticketPrintArea">
@@ -758,6 +564,7 @@ TEL: <span id="pTelefono">0241-0000000</span><br><br>
 </div>
 </div>
 </div>
+
 <script>
 // ==========================================
 // 1. CONFIGURACIÓN E INICIALIZACIÓN
@@ -769,11 +576,9 @@ let supabaseClient = null;
 try {
   if (window.supabase) {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  } else {
-    console.warn("Librería de Supabase no detectada en el HTML.");
   }
 } catch(e) {
-  console.warn("Error al inicializar Supabase:", e);
+  console.warn("Supabase en modo offline o no configurado:", e);
 }
 
 // Variables Globales
@@ -784,7 +589,7 @@ let filtroCategoriaActual = 'todas';
 let ventaTempParaImprimir = null;
 
 // ==========================================
-// 2. EVENTOS DE CARGA (ON LOAD)
+// 2. EVENTOS Y LOGIN
 // ==========================================
 window.addEventListener('load', function() {
   setTimeout(function() {
@@ -797,22 +602,20 @@ window.addEventListener('load', function() {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Setear fecha de hoy
+  verificarSesion();
+
   const hoy = new Date().toISOString().split('T')[0];
   const fechaEl = document.getElementById("fechaVentas");
   if (fechaEl) fechaEl.value = hoy;
 
-  // Setear tasa guardada o por defecto
   const tasaGuardada = localStorage.getItem('tasa_usd') || "70.00";
   const tasaEl = document.getElementById("tasaDia");
   if (tasaEl) tasaEl.value = tasaGuardada;
 
-  // Cargar datos iniciales
   cargarDatosNegocioUI();
   await sincronizarTodo();
   await consultarTasaBCV();
 
-  // Cerrar dropdown si se hace clic fuera
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.select-search-container')) {
       const menu = document.getElementById('dropdownMenu');
@@ -821,8 +624,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
+function procesarLogin(event) {
+  if (event) event.preventDefault();
+  const user = document.getElementById("loginUsuario").value.trim();
+  const pass = document.getElementById("loginPassword").value.trim();
+  const errorEl = document.getElementById("loginError");
+
+  if (user !== "" && pass !== "") {
+    sessionStorage.setItem("is_logged_in", "true");
+    const overlay = document.getElementById("loginOverlay");
+    if (overlay) overlay.style.display = "none";
+    if (errorEl) errorEl.style.display = "none";
+  } else {
+    if (errorEl) {
+      errorEl.innerText = "Ingresa un usuario y contraseña válidos.";
+      errorEl.style.display = "block";
+    }
+  }
+}
+
+function verificarSesion() {
+  if (sessionStorage.getItem("is_logged_in") === "true") {
+    const overlay = document.getElementById("loginOverlay");
+    if (overlay) overlay.style.display = "none";
+  }
+}
+
 // ==========================================
-// 3. FUNCIONES BASE & TASA DE CAMBIO
+// 3. TASA DE CAMBIO (BCV)
 // ==========================================
 async function sincronizarTodo() {
   await cargarCatalogoProductos();
@@ -888,7 +717,6 @@ function cambiarPestaña(tab) {
   const mapTabs = { 'ventas': 0, 'inventario': 1, 'deudas': 2, 'historial': 3, 'productos': 4, 'negocio': 5 };
   if (btns[mapTabs[tab]]) btns[mapTabs[tab]].classList.add('active');
 
-  // Recargar datos de la pestaña actual
   if(tab === 'ventas') cargarVentasDia();
   if(tab === 'inventario') cargarInventario();
   if(tab === 'deudas') cargarCuentasPorCobrar();
@@ -926,21 +754,31 @@ function toggleOpcionesFiado() {
 // 4. CATÁLOGO E INVENTARIO
 // ==========================================
 async function cargarCatalogoProductos() {
+  let cargados = false;
   if (supabaseClient) {
-    const { data, error } = await supabaseClient.from('productos').select('*');
-    if (!error && data && data.length > 0) {
-      productosGlobales = data.map(p => ({
-        id: p.id,
-        nombre: p.nombre,
-        precioUSD: parseFloat(p.precio_usd),
-        stock: parseInt(p.stock)
-      }));
-    } else {
-      productosGlobales = JSON.parse(localStorage.getItem('catalogo_productos')) || [];
-    }
-  } else {
-    productosGlobales = JSON.parse(localStorage.getItem('catalogo_productos')) || [];
+    try {
+      const { data, error } = await supabaseClient.from('productos').select('*');
+      if (!error && data && data.length > 0) {
+        productosGlobales = data.map(p => ({
+          id: p.id,
+          nombre: p.nombre,
+          precioUSD: parseFloat(p.precio_usd || p.precioUSD),
+          stock: parseInt(p.stock)
+        }));
+        cargados = true;
+      }
+    } catch(e) {}
   }
+
+  if (!cargados) {
+    productosGlobales = JSON.parse(localStorage.getItem('catalogo_productos')) || [
+      { id: 1, nombre: "Solución Fisiológica", precioUSD: 2.50, stock: 25 },
+      { id: 2, nombre: "Inyectadora 5ml", precioUSD: 0.50, stock: 100 },
+      { id: 3, nombre: "Gaza Estéril", precioUSD: 1.00, stock: 50 }
+    ];
+  }
+
+  localStorage.setItem('catalogo_productos', JSON.stringify(productosGlobales));
 
   const tasa = obtenerTasaActual();
   const tbody = document.getElementById("tablaProductosCat");
@@ -971,29 +809,37 @@ async function guardarNuevoProducto() {
     return;
   }
 
+  const nuevoProd = { id: Date.now(), nombre, precioUSD, stock };
+
   if (supabaseClient) {
-    const { error } = await supabaseClient.from('productos').insert([{
-      nombre: nombre, 
-      precio_usd: precioUSD, 
-      stock: stock
-    }]);
-    if (error) alert("Error guardando en Supabase: " + error.message);
+    try {
+      await supabaseClient.from('productos').insert([{
+        nombre: nombre, 
+        precio_usd: precioUSD, 
+        stock: stock
+      }]);
+    } catch(e){}
   }
+
+  productosGlobales.push(nuevoProd);
+  localStorage.setItem('catalogo_productos', JSON.stringify(productosGlobales));
 
   document.getElementById("nuevoNombreProd").value = "";
   document.getElementById("nuevoPrecioProd").value = "";
   document.getElementById("nuevoStockProd").value = "10";
   
   await cargarCatalogoProductos();
-  alert("¡Producto guardado y sincronizado!");
+  alert("¡Producto guardado correctamente!");
 }
 
 async function borrarProductoCatalogo(index) {
-  if(confirm("¿Borrar producto del sistema en la nube?")) {
+  if(confirm("¿Borrar producto del catálogo?")) {
     const prod = productosGlobales[index];
     if (supabaseClient && prod.id) {
-      await supabaseClient.from('productos').delete().eq('id', prod.id);
+      try { await supabaseClient.from('productos').delete().eq('id', prod.id); } catch(e){}
     }
+    productosGlobales.splice(index, 1);
+    localStorage.setItem('catalogo_productos', JSON.stringify(productosGlobales));
     await cargarCatalogoProductos();
   }
 }
@@ -1029,16 +875,20 @@ async function actualizarStock(index) {
   const nuevoStock = parseInt(document.getElementById(`stockInput_${index}`).value);
   const prod = productosGlobales[index];
 
+  prod.stock = nuevoStock;
+  localStorage.setItem('catalogo_productos', JSON.stringify(productosGlobales));
+
   if (supabaseClient && prod.id) {
-    await supabaseClient.from('productos').update({ stock: nuevoStock }).eq('id', prod.id);
+    try { await supabaseClient.from('productos').update({ stock: nuevoStock }).eq('id', prod.id); } catch(e){}
   }
+  
   await cargarCatalogoProductos();
   cargarInventario();
   alert(`Stock actualizado a ${nuevoStock} unidades.`);
 }
 
 // ==========================================
-// 5. DROPDOWN & CARRITO
+// 5. DROPDOWN Y CARRITO
 // ==========================================
 function mostrarListaDropdown() {
   filtrarListaDropdown();
@@ -1175,20 +1025,12 @@ function finalizarVenta(conFactura = false) {
   let estado = (tipoPago === 'Fiado') ? 'Pendiente' : 'Pagado';
   let categoriaFinal = (tipoPago === 'Fiado') ? categoriaFiado : 'Contado';
 
-  if(!cliente || cliente === "Contado General") {
-    cliente = (estado === 'Pendiente') ? "Cuenta No Especificada" : "Contado General";
-  }
-
   let subtotalUSD = 0;
-  carrito.forEach(item => {
-    subtotalUSD += item.subtotalUSD;
-  });
+  carrito.forEach(item => subtotalUSD += item.subtotalUSD);
 
   let ivaUSD = subtotalUSD * 0.16;
   let totalUSD = subtotalUSD + ivaUSD;
   let totalBS = totalUSD * tasa;
-  let subtotalBS = subtotalUSD * tasa;
-  let ivaBS = ivaUSD * tasa;
 
   const nuevaVenta = {
     id: Date.now(),
@@ -1202,9 +1044,9 @@ function finalizarVenta(conFactura = false) {
     detalle: carrito.map(i => `${i.cantidad} ${i.nombre}`).join(", "),
     items: [...carrito],
     subtotalUSD: subtotalUSD,
-    subtotalBS: subtotalBS,
+    subtotalBS: subtotalUSD * tasa,
     ivaUSD: ivaUSD,
-    ivaBS: ivaBS,
+    ivaBS: ivaUSD * tasa,
     montoUSD: totalUSD,
     montoBS: totalBS,
     tasaUsada: tasa,
@@ -1216,46 +1058,51 @@ function finalizarVenta(conFactura = false) {
     abrirModalFactura(nuevaVenta);
   } else {
     guardarVentaEnSistema(nuevaVenta);
-    alert("¡Venta registrada y sincronizada en la nube!");
+    alert("¡Venta registrada con éxito!");
   }
 }
 
 async function guardarVentaEnSistema(venta) {
-  // Descontar inventario
   for (let item of venta.items) {
     const prod = productosGlobales.find(p => p.nombre.toLowerCase() === item.nombre.toLowerCase());
     if (prod) {
-      const nuevoStock = Math.max(0, prod.stock - item.cantidad);
+      prod.stock = Math.max(0, prod.stock - item.cantidad);
       if (supabaseClient && prod.id) {
-        await supabaseClient.from('productos').update({ stock: nuevoStock }).eq('id', prod.id);
+        try { await supabaseClient.from('productos').update({ stock: prod.stock }).eq('id', prod.id); } catch(e){}
       }
     }
   }
+  localStorage.setItem('catalogo_productos', JSON.stringify(productosGlobales));
 
-  // Guardar venta
+  ventasGlobales.push(venta);
+  localStorage.setItem('ventas_locales', JSON.stringify(ventasGlobales));
+
   if (supabaseClient) {
-    await supabaseClient.from('ventas').insert([{
-      id: venta.id,
-      fecha: venta.fecha,
-      hora: venta.hora,
-      cliente: venta.cliente,
-      rif_cliente: venta.rifCliente,
-      dir_cliente: venta.dirCliente,
-      categoria: venta.categoria,
-      detalle: venta.detalle,
-      monto_usd: venta.montoUSD,
-      monto_bs: venta.montoBS,
-      tasa_usada: venta.tasaUsada,
-      estado: venta.estado,
-      items: venta.items
-    }]);
+    try {
+      await supabaseClient.from('ventas').insert([{
+        id: venta.id,
+        fecha: venta.fecha,
+        hora: venta.hora,
+        cliente: venta.cliente,
+        rif_cliente: venta.rifCliente,
+        dir_cliente: venta.dirCliente,
+        categoria: venta.categoria,
+        detalle: venta.detalle,
+        monto_usd: venta.montoUSD,
+        monto_bs: venta.montoBS,
+        tasa_usada: venta.tasaUsada,
+        estado: venta.estado,
+        items: venta.items
+      }]);
+    } catch(e){}
   }
 
-  // Limpiar interfaz
   carrito = [];
   document.getElementById("nombreCliente").value = "";
   document.getElementById("rifCliente").value = "";
   document.getElementById("dirCliente").value = "";
+  if(document.getElementById("telefonoCliente")) document.getElementById("telefonoCliente").value = "";
+  
   renderizarCarrito();
   await sincronizarTodo();
 }
@@ -1264,25 +1111,33 @@ async function cargarVentasDia() {
   const fechaEl = document.getElementById("fechaVentas");
   const fecha = fechaEl ? fechaEl.value : new Date().toISOString().split('T')[0];
 
+  let cargado = false;
   if (supabaseClient) {
-    const { data } = await supabaseClient.from('ventas').select('*');
-    if (data) {
-      ventasGlobales = data.map(v => ({
-        id: v.id,
-        fecha: v.fecha,
-        hora: v.hora,
-        cliente: v.cliente,
-        rifCliente: v.rif_cliente,
-        dirCliente: v.dir_cliente,
-        categoria: v.categoria,
-        detalle: v.detalle,
-        montoUSD: parseFloat(v.monto_usd),
-        montoBS: parseFloat(v.monto_bs),
-        tasaUsada: parseFloat(v.tasa_usada),
-        estado: v.estado,
-        items: v.items || []
-      }));
-    }
+    try {
+      const { data } = await supabaseClient.from('ventas').select('*');
+      if (data && data.length > 0) {
+        ventasGlobales = data.map(v => ({
+          id: v.id,
+          fecha: v.fecha,
+          hora: v.hora,
+          cliente: v.cliente,
+          rifCliente: v.rif_cliente,
+          dirCliente: v.dir_cliente,
+          categoria: v.categoria,
+          detalle: v.detalle,
+          montoUSD: parseFloat(v.monto_usd),
+          montoBS: parseFloat(v.monto_bs),
+          tasaUsada: parseFloat(v.tasa_usada),
+          estado: v.estado,
+          items: v.items || []
+        }));
+        cargado = true;
+      }
+    } catch(e){}
+  }
+
+  if (!cargado) {
+    ventasGlobales = JSON.parse(localStorage.getItem('ventas_locales')) || [];
   }
 
   const ventasDia = ventasGlobales.filter(v => v.fecha === fecha);
@@ -1321,10 +1176,12 @@ async function cargarVentasDia() {
 }
 
 async function eliminarVenta(id) {
-  if(confirm("¿Seguro que deseas eliminar este registro de la nube?")) {
+  if(confirm("¿Seguro que deseas eliminar este registro?")) {
     if (supabaseClient) {
-      await supabaseClient.from('ventas').delete().eq('id', id);
+      try { await supabaseClient.from('ventas').delete().eq('id', id); } catch(e){}
     }
+    ventasGlobales = ventasGlobales.filter(v => v.id !== id);
+    localStorage.setItem('ventas_locales', JSON.stringify(ventasGlobales));
     await cargarVentasDia();
   }
 }
@@ -1377,8 +1234,13 @@ function cargarCuentasPorCobrar() {
 }
 
 async function marcarComoPagado(id) {
+  const v = ventasGlobales.find(v => v.id === id);
+  if (v) v.estado = 'Pagado';
+
+  localStorage.setItem('ventas_locales', JSON.stringify(ventasGlobales));
+
   if (supabaseClient) {
-    await supabaseClient.from('ventas').update({ estado: 'Pagado' }).eq('id', id);
+    try { await supabaseClient.from('ventas').update({ estado: 'Pagado' }).eq('id', id); } catch(e){}
   }
   await sincronizarTodo();
   cargarCuentasPorCobrar();
@@ -1386,7 +1248,7 @@ async function marcarComoPagado(id) {
 }
 
 // ==========================================
-// 8. HISTORIAL ACUMULADO Y BÚSQUEDA
+// 8. HISTORIAL ACUMULADO Y TICKET
 // ==========================================
 function cargarHistorialAcumulado() {
   const tbody = document.getElementById("tablaHistorialRango");
@@ -1416,7 +1278,7 @@ function cargarHistorialAcumulado() {
           <td>$${v.montoUSD.toFixed(2)}</td>
           <td>Bs. ${v.montoBS.toFixed(2)}</td>
           <td>
-            <button onclick="mostrarTicketHistorial('${v.id}')" class="badge ${badgeClass}" style="border: none; cursor: pointer; font-weight: bold;">
+            <button onclick="mostrarTicketHistorial(${v.id})" class="badge ${badgeClass}" style="border: none; cursor: pointer; font-weight: bold;">
               ${v.estado}
             </button>
           </td>
@@ -1430,35 +1292,38 @@ function cargarHistorialAcumulado() {
   if (document.getElementById("histCantVentas")) document.getElementById("histCantVentas").innerText = cantVentas;
 }
 
-// ==========================================
-// 9. TICKET FLOTANTE DE HISTORIAL
-// ==========================================
 function mostrarTicketHistorial(idVenta) {
-  const venta = ventasGlobales.find(v => String(v.id) === String(idVenta) || String(v.timestamp) === String(idVenta));
-  
+  const venta = ventasGlobales.find(v => String(v.id) === String(idVenta));
   if (!venta) {
     alert("No se encontró la información de esta venta.");
     return;
   }
+
+  const config = JSON.parse(localStorage.getItem('cfg_negocio')) || {
+    razonSocial: "CLÍNICA Y SERVICIOS C.A.",
+    rif: "J-12345678-0",
+    direccion: "Valencia, Carabobo",
+    telefono: "0241-0000000"
+  };
 
   const modalAnterior = document.getElementById("modalTicketFlotante");
   if (modalAnterior) modalAnterior.remove();
 
   const montoBS = Number(venta.montoBS) || 0;
   const montoUSD = Number(venta.montoUSD) || 0;
-  const tasa = venta.tasaUsada || ((montoBS > 0 && montoUSD > 0) ? (montoBS / montoUSD).toFixed(2) : 'N/A');
+  const tasa = venta.tasaUsada || (montoUSD > 0 ? (montoBS / montoUSD).toFixed(2) : '1.00');
 
   const modalDiv = document.createElement("div");
   modalDiv.id = "modalTicketFlotante";
   modalDiv.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 15px; box-sizing: border-box;";
 
   modalDiv.innerHTML = `
-    <div style="background: #fff; width: 100%; max-width: 380px; padding: 25px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); font-family: Arial, sans-serif; text-align: center; max-height: 90vh; overflow-y: auto;">
-      <h3 style="margin: 0 0 5px 0; font-size: 18px; text-transform: uppercase;">FACTURA / TICKET</h3>
-      <p style="font-size: 12px; color: #555; margin: 2px 0; font-weight: bold;">Alexander Alvarado Torrealba</p>
-      <p style="font-size: 11px; color: #666; margin: 2px 0;">RIF: V-123686671</p>
-      <p style="font-size: 11px; color: #666; margin: 2px 0;">Calle Sucre, cruce con Mariño, sector La Romana, casa 3-67, Urb. Ricardo Urriera, Valencia, Carabobo</p>
-      <p style="font-size: 11px; color: #666; margin: 2px 0 10px 0;">TEL: 04144384410</p>
+    <div style="background: #fff; width: 100%; max-width: 380px; padding: 25px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); font-family: 'Courier New', Courier, monospace; text-align: center; max-height: 90vh; overflow-y: auto;">
+      <h3 style="margin: 0 0 5px 0; font-size: 16px;">TICKET DE VENTA</h3>
+      <p style="font-size: 13px; font-weight: bold; margin: 2px 0;">${config.razonSocial}</p>
+      <p style="font-size: 11px; margin: 2px 0;">RIF: ${config.rif}</p>
+      <p style="font-size: 11px; margin: 2px 0;">${config.direccion}</p>
+      <p style="font-size: 11px; margin: 2px 0 10px 0;">TEL: ${config.telefono}</p>
       
       <div style="border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 10px 0; text-align: left; font-size: 12px; margin: 10px 0;">
         <p style="margin: 3px 0;"><b>FECHA:</b> ${venta.fecha} - ${venta.hora}</p>
@@ -1466,21 +1331,21 @@ function mostrarTicketHistorial(idVenta) {
         <p style="margin: 3px 0;"><b>ESTADO:</b> <span style="font-weight:bold; color:${venta.estado === 'Pagado' ? '#28a745' : '#dc3545'};">${venta.estado}</span></p>
       </div>
 
-      <div style="text-align: left; font-size: 12px; margin: 10px 0; min-height: 40px;">
-        <b>Productos / Detalle:</b><br>
-        <p style="white-space: pre-line; margin: 5px 0; color: #333;">${venta.detalle}</p>
+      <div style="text-align: left; font-size: 12px; margin: 10px 0;">
+        <b>Productos:</b><br>
+        <p style="white-space: pre-line; margin: 5px 0;">${venta.detalle}</p>
       </div>
 
       <div style="border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 10px 0; text-align: right; font-size: 13px; margin: 10px 0;">
         <p style="margin: 4px 0;">TASA: <b>${tasa} Bs/$</b></p>
         <p style="margin: 4px 0;">TOTAL USD: <b>$${montoUSD.toFixed(2)}</b></p>
-        <p style="margin: 4px 0; font-size: 15px; color: #000;">TOTAL A PAGAR (Bs): <b>Bs. ${montoBS.toFixed(2)}</b></p>
+        <p style="margin: 4px 0; font-size: 15px;">TOTAL (Bs): <b>Bs. ${montoBS.toFixed(2)}</b></p>
       </div>
 
-      <p style="font-size: 11px; margin: 15px 0 5px 0; font-style: italic;">*** GRACIAS POR SU COMPRA ***</p>
+      <p style="font-size: 11px; margin: 15px 0 5px 0;">*** GRACIAS POR SU COMPRA ***</p>
 
-      <div style="display: flex; gap: 10px; margin-top: 15px;">
-        <button id="btnCerrarModal" style="flex: 1; background: #dc3545; color: white; border: none; padding: 10px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer;">Cancelar</button>
+      <div style="display: flex; gap: 10px; margin-top: 15px;" class="modal-actions">
+        <button id="btnCerrarModal" style="flex: 1; background: #dc3545; color: white; border: none; padding: 10px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer;">Cerrar</button>
         <button id="btnImprimirModal" style="flex: 1; background: #28a745; color: white; border: none; padding: 10px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer;">🖨️ Imprimir</button>
       </div>
     </div>
@@ -1488,21 +1353,12 @@ function mostrarTicketHistorial(idVenta) {
 
   document.body.appendChild(modalDiv);
 
-  document.getElementById("btnCerrarModal").addEventListener("click", () => {
-    modalDiv.remove();
-  });
-
-  document.getElementById("btnImprimirModal").addEventListener("click", () => {
-    window.print();
-  });
-}
-
-function verDetalleVentaHistorial(idVenta) {
-  mostrarTicketHistorial(idVenta);
+  document.getElementById("btnCerrarModal").addEventListener("click", () => modalDiv.remove());
+  document.getElementById("btnImprimirModal").addEventListener("click", () => window.print());
 }
 
 // ==========================================
-// 10. CONFIGURACIÓN FISCAL E IMPRESIÓN
+// 9. CONFIGURACIÓN FISCAL E IMPRESIÓN
 // ==========================================
 function cargarDatosNegocioUI() {
   const datos = JSON.parse(localStorage.getItem('cfg_negocio')) || {
@@ -1531,15 +1387,14 @@ function guardarDatosNegocio() {
     serie: document.getElementById("cfgSerie").value.trim(),
     correlativo: parseInt(document.getElementById("cfgCorrelativo").value) || 1
   };
-  localStorage.setItem('datos_negocio', JSON.stringify(datos));
   localStorage.setItem('cfg_negocio', JSON.stringify(datos));
-  alert("¡Configuración fiscal guardada con éxito!");
+  alert("¡Configuración fiscal guardada!");
 }
 
 function abrirModalFactura(venta) {
-  const config = JSON.parse(localStorage.getItem('datos_negocio')) || {
-    razonSocial: "NOMBRE NEGOCIO C.A.",
-    rif: "J-00000000-0",
+  const config = JSON.parse(localStorage.getItem('cfg_negocio')) || {
+    razonSocial: "CLÍNICA Y SERVICIOS C.A.",
+    rif: "J-12345678-0",
     direccion: "Valencia, Carabobo",
     telefono: "0241-0000000",
     serie: "FACT-001-",
@@ -1585,9 +1440,8 @@ function cerrarModalFactura() {
 async function confirmarEImprimirFactura() {
   if (!ventaTempParaImprimir) return;
 
-  let cfg = JSON.parse(localStorage.getItem('datos_negocio')) || { correlativo: 1 };
+  let cfg = JSON.parse(localStorage.getItem('cfg_negocio')) || { correlativo: 1 };
   cfg.correlativo = (parseInt(cfg.correlativo) || 1) + 1;
-  localStorage.setItem('datos_negocio', JSON.stringify(cfg));
   localStorage.setItem('cfg_negocio', JSON.stringify(cfg));
   cargarDatosNegocioUI();
 
@@ -1597,7 +1451,7 @@ async function confirmarEImprimirFactura() {
 }
 
 // ==========================================
-// 11. EXPORTACIÓN A CSV
+// 10. EXPORTACIÓN A CSV / EXCEL
 // ==========================================
 function exportarCSV() {
   const fechaEl = document.getElementById("fechaVentas");
@@ -1615,6 +1469,7 @@ function exportarCSV() {
 }
 
 function exportarHistorialCSV() {
+  if (ventasGlobales.length === 0) return alert("No hay ventas en el historial.");
   let csv = "Fecha;Hora;Cliente;Categoria;Productos;Monto USD;Monto Bs;Tasa;Estado\n";
   ventasGlobales.forEach(v => {
     csv += `"${v.fecha}";"${v.hora}";"${v.cliente}";"${v.categoria}";"${v.detalle}";"${v.montoUSD}";"${v.montoBS}";"${v.tasaUsada}";"${v.estado}"\n`;
@@ -1630,7 +1485,5 @@ function descargarBlob(contenido, nombreArchivo) {
   link.click();
 }
 </script>
-
 </body>
-</html>
 </html>
