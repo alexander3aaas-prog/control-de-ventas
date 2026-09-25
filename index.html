@@ -1387,7 +1387,7 @@ function guardarDatosNegocio() {
     serie: document.getElementById("cfgSerie").value.trim(),
     correlativo: parseInt(document.getElementById("cfgCorrelativo").value) || 1
   };
-  localStorage.setItem('cfg_negocio', JSON.stringify(datos));
+   supabaseClient.from('cfg_negocio', JSON.stringify(datos));
   alert("¡Configuración fiscal guardada!");
 }
 
