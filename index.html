@@ -1361,7 +1361,7 @@ function mostrarTicketHistorial(idVenta) {
 // 9. CONFIGURACIÓN FISCAL E IMPRESIÓN
 // ==========================================
 function cargarDatosNegocioUI() {
-  const datos = JSON.parse(localStorage.getItem('cfg_negocio')) || {
+  const datos = JSON.parse( supabaseClient.from('cfg_negocio')) || {
     razonSocial: "CLÍNICA Y SERVICIOS C.A.",
     rif: "J-12345678-0",
     direccion: "Valencia, Carabobo",
@@ -1392,7 +1392,7 @@ function guardarDatosNegocio() {
 }
 
 function abrirModalFactura(venta) {
-  const config = JSON.parse(localStorage.getItem('cfg_negocio')) || {
+  const config = JSON.parse( supabaseClient.from('cfg_negocio')) || {
     razonSocial: "CLÍNICA Y SERVICIOS C.A.",
     rif: "J-12345678-0",
     direccion: "Valencia, Carabobo",
