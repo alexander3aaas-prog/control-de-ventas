@@ -1360,35 +1360,74 @@ function mostrarTicketHistorial(idVenta) {
 // ==========================================
 // 9. CONFIGURACIÓN FISCAL E IMPRESIÓN
 // ==========================================
-function cargarDatosNegocioUI() {
-  const datos = JSON.parse(localStorage.getItem('cfg_negocio')) || {
-    razonSocial: "CLÍNICA Y SERVICIOS C.A.",
-    rif: "J-12345678-0",
-    direccion: "Valencia, Carabobo",
-    telefono: "0241-0000000",
-    serie: "FACT-001-",
-    correlativo: 1
-  };
+// Función para GUARDAR los datos del SENIAT en la nube
+async function guardarDatosNegocio() {
+    const datos = {
+        id: 1, // Usamos siempre el ID 1 para que actualice la misma fila y no cree varias
+        razonSocial: document.getElementById("cfgRazonSocial").value.trim(),
+        rif: document.getElementById("cfgRif").value.trim(),
+        direccion: document.getElementById("cfgDireccion").value.trim(),
+        telefono: document.getElementById("cfgTelefono").value.trim(),
+        serie: document.getElementById("cfgSerie").value.trim(),
+        correlativo: parseInt(document.getElementById("cfgCorrelativo").value) || 0
+    };
 
-  if(document.getElementById("cfgRazonSocial")) document.getElementById("cfgRazonSocial").value = datos.razonSocial;
-  if(document.getElementById("cfgRif")) document.getElementById("cfgRif").value = datos.rif;
-  if(document.getElementById("cfgDireccion")) document.getElementById("cfgDireccion").value = datos.direccion;
-  if(document.getElementById("cfgTelefono")) document.getElementById("cfgTelefono").value = datos.telefono;
-  if(document.getElementById("cfgSerie")) document.getElementById("cfgSerie").value = datos.serie;
-  if(document.getElementById("cfgCorrelativo")) document.getElementById("cfgCorrelativo").value = datos.correlativo;
+    try {
+        // 1. Guardar en Supabase (upsert actualiza si existe, o crea si no existe)
+        const { data, error } = await supabase
+            .from('configuracion_fiscal')
+            .upsert([datos]);
+
+        if (error) throw error;
+
+        // 2. Guardar un respaldo local por si te quedas sin internet
+        localStorage.setItem('cfg_negocio', JSON.stringify(datos));
+        
+        alert("¡Configuración fiscal guardada en la nube con éxito!");
+        
+    } catch (error) {
+        console.error("Error guardando en Supabase:", error);
+        alert("Hubo un error al guardar en la nube. Se guardará solo de forma local.");
+        // Respaldo local de emergencia
+        localStorage.setItem('cfg_negocio', JSON.stringify(datos));
+    }
 }
 
-function guardarDatosNegocio() {
-  const datos = {
-    razonSocial: document.getElementById("cfgRazonSocial").value.trim(),
-    rif: document.getElementById("cfgRif").value.trim(),
-    direccion: document.getElementById("cfgDireccion").value.trim(),
-    telefono: document.getElementById("cfgTelefono").value.trim(),
-    serie: document.getElementById("cfgSerie").value.trim(),
-    correlativo: parseInt(document.getElementById("cfgCorrelativo").value) || 1
-  };
-  localStorage.setItem('cfg_negocio', JSON.stringify(datos));
-  alert("¡Configuración fiscal guardada!");
+// Función para CARGAR los datos del SENIAT desde la nube al abrir la app
+async function cargarDatosNegocioUI() {
+    try {
+        // 1. Intentar descargar la configuración más reciente desde Supabase
+        const { data, error } = await supabase
+            .from('configuracion_fiscal')
+            .select('*')
+            .eq('id', 1)
+            .single();
+
+        let datosNegocio = data;
+
+        // 2. Si falla el internet o no hay datos en la nube, buscar en el respaldo local
+        if (error || !data) {
+            const guardadoLocal = localStorage.getItem('cfg_negocio');
+            if (guardadoLocal) {
+                datosNegocio = JSON.parse(guardadoLocal);
+            }
+        }
+
+        // 3. Si encontramos datos (en la nube o locales), llenamos los cuadros de texto
+        if (datosNegocio) {
+            document.getElementById("cfgRazonSocial").value = datosNegocio.razonSocial || "";
+            document.getElementById("cfgRif").value = datosNegocio.rif || "";
+            document.getElementById("cfgDireccion").value = datosNegocio.direccion || "";
+            document.getElementById("cfgTelefono").value = datosNegocio.telefono || "";
+            document.getElementById("cfgSerie").value = datosNegocio.serie || "";
+            document.getElementById("cfgCorrelativo").value = datosNegocio.correlativo || 0;
+            
+            // Actualizamos el respaldo local para mantenerlo sincronizado con la nube
+            localStorage.setItem('cfg_negocio', JSON.stringify(datosNegocio));
+        }
+    } catch (error) {
+        console.error("Error cargando configuración fiscal:", error);
+    }
 }
 
 function abrirModalFactura(venta) {
